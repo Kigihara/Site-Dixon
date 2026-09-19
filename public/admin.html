@@ -52,7 +52,7 @@ a.back{color:var(--lime);font-size:14px}
 <div class="bar" id="bar" style="display:none"><input id="q" placeholder="Поиск: имя, телефон, тема"><button class="ghost" id="reload">Обновить</button><button class="ghost" id="csv">Скачать CSV</button><button class="ghost" id="blank">Бланк гарантии</button><label class="live"><input type="checkbox" id="live" checked> live</label><span class="count" id="count"></span></div>
 <table id="tbl" style="display:none"><thead><tr><th>#</th><th>Когда</th><th>Имя</th><th>Телефон</th><th>Тема</th><th></th></tr></thead><tbody id="rows"></tbody></table>
 <div id="toast"></div>
-<p style="margin-top:22px"><a class="back" href="/">← На сайт</a></p>
+<p style="margin-top:22px"><a class="back" href="./">← На сайт</a></p>
 <script>
 if(location.protocol==='file:')document.getElementById('err').textContent='Откройте страницу через сервер: запустите start.bat, затем http://127.0.0.1:8099/admin.html';
 let token="";
@@ -82,10 +82,10 @@ function render(){
       tr.children[4].textContent=l.topic;
       const b=document.createElement("button");
       b.textContent=l.done?"Вернуть":"Готово";
-      b.onclick=async()=>{await api("/api/leads/"+l.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({done:!l.done})});load()};
+      b.onclick=async()=>{await api("api/leads/"+l.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({done:!l.done})});load()};
       const d=document.createElement("button");
       d.textContent="✕";d.className="danger";d.title="Удалить";
-      d.onclick=async()=>{if(confirm("Удалить заявку №"+l.id+"?")){await api("/api/leads/"+l.id,{method:"DELETE"});load()}};
+      d.onclick=async()=>{if(confirm("Удалить заявку №"+l.id+"?")){await api("api/leads/"+l.id,{method:"DELETE"});load()}};
       tr.children[5].appendChild(b);
       tr.children[5].appendChild(document.createTextNode(" "));
       tr.children[5].appendChild(d);
@@ -95,12 +95,12 @@ function render(){
 async function load(){
   $("err").textContent="";
   try{
-    const j=await api("/api/leads");
+    const j=await api("api/leads");
     allLeads=j.leads;
     render();
     lastMax=Math.max(lastMax||0,...allLeads.map(l=>l.id),0);
     try{
-      const s=await api("/api/stats");
+      const s=await api("api/stats");
       $("stTotal").textContent=s.total;$("stOpen").textContent=s.open;
       $("stDone").textContent=s.done;$("stToday").textContent=s.today;
       $("stats").style.display="";
@@ -113,14 +113,14 @@ $("go").onclick=()=>{token=$("tok").value.trim();if(token){load();connectLive()}
 $("tok").addEventListener("keydown",e=>{if(e.key==="Enter")$("go").click()});
 $("reload").onclick=load;
 $("q").addEventListener("input",render);
-$("csv").onclick=()=>{location.href="/api/leads.csv?token="+encodeURIComponent(token)};
-$("blank").onclick=()=>{open("/garantiya.html","_blank")};
+$("csv").onclick=()=>{location.href="api/leads.csv?token="+encodeURIComponent(token)};
+$("blank").onclick=()=>{open("./garantiya.html","_blank")};
 setInterval(()=>{const lv=document.querySelector('#live');if(lv&&lv.checked&&token)load()},30000);
 let esToast=null;
 function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(esToast);esToast=setTimeout(()=>t.classList.remove("show"),4000)}
 function connectLive(){
   try{
-    const src=new EventSource("/api/events?token="+encodeURIComponent(token));
+    const src=new EventSource("api/events?token="+encodeURIComponent(token));
     src.addEventListener("lead:new",e=>{try{const d=JSON.parse(e.data);toast("Новая заявка №"+d.id)}catch(_){}load()});
     src.addEventListener("lead:update",()=>load());
     src.addEventListener("lead:delete",()=>load());

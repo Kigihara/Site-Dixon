@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: dixon-site
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: DATA_DIR
+        value: /app/data
+      - key: HOST
+        value: 0.0.0.0

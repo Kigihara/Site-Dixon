@@ -7,15 +7,15 @@
 <meta name="description" content="DIXON — ремонт Samsung в Чебоксарах: экраны, аккумуляторы, корпуса, разъёмы. Оригинальные запчасти, гарантия, ремонт от 40 минут. Калинина, 91к1.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23C8FF2E'/%3E%3Ctext x='16' y='23' font-size='18' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%23111'%3ED%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#0B0E13">
-<link rel="manifest" href="/manifest.webmanifest">
-<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon.svg">
 <meta property="og:type" content="website">
 <meta property="og:title" content="DIXON — ремонт Samsung в Чебоксарах за день">
 <meta property="og:description" content="Экраны, аккумуляторы, корпуса. Оригинальные запчасти, гарантия до 12 месяцев. Калинина, 91к1.">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"DIXON — сервисный центр Samsung","telephone":"+7 8352 36-42-02","email":"manager@dixon-sc.ru","address":{"@type":"PostalAddress","addressLocality":"Чебоксары","streetAddress":"ул. Калинина, 91к1","addressCountry":"RU"},"openingHours":"Mo-Su 09:00-20:00","priceRange":"₽₽"}</script>
-<link rel="preload" href="/fonts/unbounded-cyrillic-800.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/manrope-cyrillic-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="preload" href="./fonts/unbounded-cyrillic-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./fonts/manrope-cyrillic-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./fonts/fonts.css">
 <style>
 :root{
   --bg:#0B0E13; --surface:#121722; --surface2:#171E2B; --line:rgba(255,255,255,.11);
@@ -459,7 +459,7 @@ section.block{scroll-margin-top:70px}
 
 <a class="callbar" href="tel:+78352364202">Позвонить: 8 (8352) 36-42-02</a>
 <button id="toTop" aria-label="Наверх">↑</button>
-<footer><div class="wrap foot"><span>Сервисный центр DIXON © 2022–2026 • Чебоксары, Калинина 91к1</span><span class="mono">Цены с dixon-sc.ru • редизайн-концепт</span><a href="https://www.tclmobile.ru/">Официальный сайт TCL →</a><a href="/admin.html">Сотрудникам</a></div></footer>
+<footer><div class="wrap foot"><span>Сервисный центр DIXON © 2022–2026 • Чебоксары, Калинина 91к1</span><span class="mono">Цены с dixon-sc.ru • редизайн-концепт</span><a href="https://www.tclmobile.ru/">Официальный сайт TCL →</a><a href="./admin.html">Сотрудникам</a></div></footer>
 
 <script>
 // loader
@@ -486,7 +486,7 @@ const out=document.getElementById('symOut');
 document.getElementById('symBtn').onclick=()=>{const v=document.getElementById('sym').value;const m={screen:'Экран: от 3 500 ₽ (A) / 13–21 тыс. ₽ (S) — точно по модели выше.',bat:'АКБ с работой: 4 200–7 400 ₽, Fold/Flip — 10 500 ₽ за пару.',back:'Крышка с работой: 2 000–7 500 ₽. Цвет уточняйте.',water:'Влага/SIM/Wi-Fi: от 1 500 ₽ после бесплатной диагностики.'};out.textContent='→ '+m[v]};
 // queue + clock
 let qq=6;setInterval(()=>{qq=Math.max(2,Math.min(11,qq+(Math.random()>.5?1:-1)));document.getElementById('queueNum').textContent=qq+' устройств'},5000);
-async function syncStatus(){try{const r=await fetch('/api/status');if(!r.ok)return;const s=await r.json();if(typeof s.queue==='number'){qq=s.queue;document.getElementById('queueNum').textContent=qq+' устройств'}}catch(e){}}
+async function syncStatus(){try{const r=await fetch('api/status');if(!r.ok)return;const s=await r.json();if(typeof s.queue==='number'){qq=s.queue;document.getElementById('queueNum').textContent=qq+' устройств'}}catch(e){}}
 setInterval(syncStatus,20000);syncStatus();
 if(location.protocol==='file:'){document.getElementById('formOk').textContent='Форма заработает после запуска сервера: откройте start.bat в папке сайта.';}
 function tick(){try{document.getElementById('msk').textContent=new Date().toLocaleTimeString('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit'})}catch(e){}const h=new Date().getHours();document.getElementById('openState').textContent=(h>=9&&h<20)?'Открыто • до 20:00':'Закрыто • с 9:00'}setInterval(tick,30000);tick();
@@ -495,12 +495,12 @@ const lines=['> calibrating touch… ok','> sealing + pressure test… ok','> re
 // magnetic
 if(matchMedia('(pointer:fine)').matches){document.querySelectorAll('[data-magnet]').forEach(b=>{b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.12}px,${(e.clientY-r.top-r.height/2)*.18}px)`});b.addEventListener('mouseleave',()=>b.style.transform='')})}
 // form
-document.getElementById('leadForm').addEventListener('submit',async e=>{e.preventDefault();const ok=document.getElementById('formOk');const fd=new FormData(e.target);const checked=document.getElementById('leadConsent').checked;if(!checked){ok.textContent='⚠ Поставьте согласие на обработку данных.';return}const body={name:String(fd.get('n')||'').trim(),phone:String(fd.get('p')||'').trim(),topic:fd.get('t'),company:String(fd.get('company')||''),consent:true};ok.textContent='Отправляем…';try{const r=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!j.ok)throw new Error(j.error||'error');if(j.id===0){ok.textContent='✓ Заявка принята. Перезвоним в течение 10 минут в рабочее время.'}else{ok.textContent='✓ Заявка №'+j.id+' принята. Перезвоним в течение 10 минут в рабочее время.'}e.target.reset()}catch(err){const m=String((err&&err.message)||'');ok.textContent=(m&&!/Failed to fetch|NetworkError|Load failed/i.test(m))?('⚠ '+m):'Не получилось отправить. Позвоните нам: 8 (8352) 36-42-02.'}});
+document.getElementById('leadForm').addEventListener('submit',async e=>{e.preventDefault();const ok=document.getElementById('formOk');const fd=new FormData(e.target);const checked=document.getElementById('leadConsent').checked;if(!checked){ok.textContent='⚠ Поставьте согласие на обработку данных.';return}const body={name:String(fd.get('n')||'').trim(),phone:String(fd.get('p')||'').trim(),topic:fd.get('t'),company:String(fd.get('company')||''),consent:true};ok.textContent='Отправляем…';try{const r=await fetch('api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!j.ok)throw new Error(j.error||'error');if(j.id===0){ok.textContent='✓ Заявка принята. Перезвоним в течение 10 минут в рабочее время.'}else{ok.textContent='✓ Заявка №'+j.id+' принята. Перезвоним в течение 10 минут в рабочее время.'}e.target.reset()}catch(err){const m=String((err&&err.message)||'');ok.textContent=(m&&!/Failed to fetch|NetworkError|Load failed/i.test(m))?('⚠ '+m):'Не получилось отправить. Позвоните нам: 8 (8352) 36-42-02.'}});
 // lead tracker
 const tf=document.getElementById('trackForm');
-if(tf)tf.addEventListener('submit',async e=>{e.preventDefault();const o=document.getElementById('trackOut');o.textContent='Проверяем…';try{const r=await fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:document.getElementById('trackId').value,phone:document.getElementById('trackPhone').value})});const j=await r.json();if(!j.ok)throw new Error(j.error||'error');o.textContent='✓ Заявка №'+j.id+(j.done?' выполнена — можно забирать!':' принята и уже в работе.')}catch(err){const m=String((err&&err.message)||'');o.textContent=(m&&!/Failed to fetch|NetworkError|Load failed/i.test(m))?('⚠ '+m):'Нужен запущенный сервер: откройте start.bat в папке сайта.'}});
+if(tf)tf.addEventListener('submit',async e=>{e.preventDefault();const o=document.getElementById('trackOut');o.textContent='Проверяем…';try{const r=await fetch('api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:document.getElementById('trackId').value,phone:document.getElementById('trackPhone').value})});const j=await r.json();if(!j.ok)throw new Error(j.error||'error');o.textContent='✓ Заявка №'+j.id+(j.done?' выполнена — можно забирать!':' принята и уже в работе.')}catch(err){const m=String((err&&err.message)||'');o.textContent=(m&&!/Failed to fetch|NetworkError|Load failed/i.test(m))?('⚠ '+m):'Нужен запущенный сервер: откройте start.bat в папке сайта.'}});
 // price calculator (data from backend)
-(async function(){const m=document.getElementById('calcModel'),j=document.getElementById('calcJob'),o=document.getElementById('calcOut');if(!m||!j||!o)return;let list=[];try{const r=await fetch('/api/prices');const d=await r.json();list=d.prices||[];if(d.updated){const nn=document.querySelector('.price-box .note');if(nn&&!nn.dataset.stamped){nn.dataset.stamped='1';nn.innerHTML+=' Обновлено: '+d.updated+'.'}}}catch(e){o.textContent='Калькулятор требует запущенный сервер (start.bat). Цены — в таблице выше.';return}
+(async function(){const m=document.getElementById('calcModel'),j=document.getElementById('calcJob'),o=document.getElementById('calcOut');if(!m||!j||!o)return;let list=[];try{const r=await fetch('api/prices');const d=await r.json();list=d.prices||[];if(d.updated){const nn=document.querySelector('.price-box .note');if(nn&&!nn.dataset.stamped){nn.dataset.stamped='1';nn.innerHTML+=' Обновлено: '+d.updated+'.'}}}catch(e){o.textContent='Калькулятор требует запущенный сервер (start.bat). Цены — в таблице выше.';return}
 const fmt=n=>Number(n).toLocaleString('ru-RU')+' ₽';
 list.forEach((p,i)=>{const op=document.createElement('option');op.value=i;op.textContent=p.model;m.appendChild(op)});
 const topics={display:'Разбит экран',battery:'Аккумулятор',back:'Корпус / крышка'};
