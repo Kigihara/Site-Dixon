@@ -74,6 +74,7 @@ h1 .lime{color:var(--lime)}
 .queue{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-family:var(--font-m);font-size:12.5px;color:#C7CEDB}
 .queue strong{color:var(--lime)}
 .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.hero-stats-wide{margin-top:28px}
 .stat{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:14px;padding:14px}
 .stat b{font-family:var(--font-d);font-size:22px;display:block}
 .stat b em{font-style:normal;color:var(--lime)}
@@ -222,7 +223,7 @@ section.block{scroll-margin-top:70px}
 .calc-out{background:rgba(200,255,46,.06);border:1px solid rgba(200,255,46,.35);border-radius:14px;padding:15px 18px;font-size:15px}
 .calc-out b{color:var(--lime);font-family:var(--font-m);font-size:18px}
 .calc-out .go{display:inline-block;margin-top:8px;color:var(--lime);font-weight:800;font-size:13.5px;cursor:pointer}
-@media(max-width:1020px){.calc-grid{grid-template-columns:1fr}}
+@media(max-width:1150px){.calc-grid{grid-template-columns:1fr}}
 /* sticky mobile call bar */
 .callbar{display:none}
 /* responsive */
@@ -232,7 +233,7 @@ section.block{scroll-margin-top:70px}
  .status-dot{display:none}
  .phone-big{font-size:13.5px}
 }
-@media(max-width:1020px){
+@media(max-width:1150px){
  .hero-grid{grid-template-columns:1fr}
  .bento{grid-template-columns:1fr 1fr}
  .card.big{grid-row:auto;grid-column:span 2}
@@ -257,7 +258,7 @@ section.block{scroll-margin-top:70px}
  table{font-size:13px}
  th:nth-child(4),td:nth-child(4){display:none}
 }
-@media(max-width:1020px){
+@media(max-width:1150px){
  .burger{display:block}
  .nav-links{display:none}
  .mmenu{display:none;position:fixed;top:68px;left:0;right:0;z-index:49;background:rgba(11,14,19,.98);border-bottom:1px solid var(--line);padding:8px 22px 16px}
@@ -319,11 +320,7 @@ section.block{scroll-margin-top:70px}
 </div>
 <div class="quick"><span>Часто ищут:</span><button data-q="S24">S24</button><button data-q="A55">A55</button><button data-q="Z Fold">Z Fold</button><button data-q="Flip">Flip</button></div>
 <div class="queue"><span>● очередь сейчас:</span><strong id="queueNum">6 устройств</strong><span>• среднее ожидание</span><strong>~2 ч 10 мин</strong></div>
-<div class="hero-stats">
-<div class="stat"><b><em data-count="12">0</em> лет</b><span>чиним технику в Чебоксарах</span></div>
-<div class="stat"><b><em data-count="40">0</em> мин</b><span>замена АКБ и разъёма</span></div>
-<div class="stat"><b><em data-count="98">0</em>%</b><span>клиентов рекомендуют нас</span></div>
-</div>
+
 </div>
 
 <div class="lab reveal in">
@@ -335,6 +332,11 @@ section.block{scroll-margin-top:70px}
 <div class="meter">Склад: 240+ деталей<div class="bar"><i style="animation-delay:-1.5s"></i></div></div>
 </div>
 </div>
+</div>
+<div class="hero-stats hero-stats-wide reveal">
+<div class="stat"><b><em data-count="12">0</em> лет</b><span>чиним технику в Чебоксарах</span></div>
+<div class="stat"><b><em data-count="40">0</em> мин</b><span>замена АКБ и разъёма</span></div>
+<div class="stat"><b><em data-count="98">0</em>%</b><span>клиентов рекомендуют нас</span></div>
 </div>
 </div>
 
