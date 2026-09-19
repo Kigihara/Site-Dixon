@@ -11,7 +11,7 @@ const crypto = require("crypto");
 const PORT = Number(process.env.PORT || 8099);
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "dixon-12345";
 const ROOT = path.join(__dirname, "public");
-const DATA = path.join(__dirname, "data");
+const DATA = process.env.DATA_DIR || path.join(__dirname, "data");
 const LEADS_FILE = path.join(DATA, "leads.json");
 const STARTED_AT = Date.now();
 
@@ -71,6 +71,15 @@ function driftStatus() {
 }
 function moscowHour() {
   return Number(new Intl.DateTimeFormat("ru-RU", { hour: "numeric", hour12: false, timeZone: "Europe/Moscow" }).format(new Date()));
+}
+
+// ---- realtime: server-sent events for admin ----
+const sseClients = new Set();
+function broadcast(type, data) {
+  const msg = "event: " + type + "\ndata: " + JSON.stringify(data) + "\n\n";
+  for (const r of [...sseClients]) {
+    try { r.write(msg); } catch (e) { sseClients.delete(r); }
+  }
 }
 
 // ---- rate limit: 20 POST /api/lead per IP per minute ----
@@ -174,6 +183,7 @@ const server = http.createServer(async (req, res) => {
       const lead = { id: nextId++, ts: new Date().toISOString(), name, phone, topic, done: false, ip };
       leads.push(lead);
       saveLeads();
+      broadcast("lead:new", { id: lead.id, name, phone, topic, ts: lead.ts });
       if (process.env.TG_BOT && process.env.TG_CHAT) {
         const text = encodeURIComponent("DIXON lead #" + lead.id + ": " + name + ", " + phone + " — " + topic);
         fetch("https://api.telegram.org/bot" + process.env.TG_BOT + "/sendMessage?chat_id=" + process.env.TG_CHAT + "&text=" + text).catch(() => {});
@@ -205,6 +215,7 @@ const server = http.createServer(async (req, res) => {
       catch (e) { return send(res, 400, { ok: false, error: "bad body" }); }
       lead.done = !!body.done;
       saveLeads();
+      broadcast("lead:update", { id: lead.id, done: lead.done });
       return send(res, 200, { ok: true, lead });
     }
     if (req.method === "GET" && url.pathname === "/api/stats") {
@@ -238,7 +249,17 @@ const server = http.createServer(async (req, res) => {
       if (i === -1) return send(res, 404, { ok: false, error: "not found" });
       leads.splice(i, 1);
       saveLeads();
+      broadcast("lead:delete", { id });
       return send(res, 200, { ok: true });
+    }
+    if (req.method === "GET" && url.pathname === "/api/events") {
+      if (!checkAdmin(req, url)) return send(res, 403, { ok: false, error: "forbidden" });
+      res.writeHead(200, Object.assign({ "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-cache", "Connection": "keep-alive" }, SEC_HEADERS));
+      res.write(": connected\n\n");
+      sseClients.add(res);
+      const hb = setInterval(() => { try { res.write(": ping\n\n"); } catch (e) { clearInterval(hb); sseClients.delete(res); } }, 25000);
+      req.on("close", () => { clearInterval(hb); sseClients.delete(res); });
+      return;
     }
     if (req.method === "GET") return serveStatic(req, res, url.pathname);
     return send(res, 405, { ok: false, error: "method not allowed" });

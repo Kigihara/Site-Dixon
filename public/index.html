@@ -114,7 +114,6 @@ section.block{padding:72px 0}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
 .card:hover{transform:translateY(-4px);border-color:rgba(200,255,46,.4)}
 .card.big{grid-row:span 2;background:radial-gradient(500px 300px at 20% 0%,rgba(200,255,46,.14),transparent 60%),var(--surface)}
-.card.wide{grid-column:span 2;display:flex;gap:18px;align-items:center}
 .card h3{font-family:var(--font-d);font-size:17px;margin:12px 0 8px}
 .card ul{list-style:none;color:#B7BFCF;font-size:14px;display:grid;gap:6px}
 .card ul li::before{content:"— ";color:var(--lime)}
@@ -252,8 +251,8 @@ section.block{scroll-margin-top:70px}
  .nav .btn{padding:11px 16px;font-size:13.5px}
  .logo small{display:none}
  .bento{grid-template-columns:1fr}
- .card.big,.card.wide{grid-column:auto;grid-row:auto}
- .card.wide{flex-direction:column;align-items:flex-start}
+ .card.big{grid-column:auto;grid-row:auto}
+
  .steps{grid-template-columns:1fr}
  .hero-stats{grid-template-columns:1fr 1fr}
  .lab{min-height:auto}
@@ -351,9 +350,9 @@ section.block{scroll-margin-top:70px}
 <div class="card big reveal"><span class="tag">ХИТ • 41% ОБРАЩЕНИЙ</span><div class="icon">📱</div><h3>Замена и ремонт экрана</h3><ul><li>разбилось стекло / трещины</li><li>не работает сенсор или часть экрана</li><li>нет подсветки</li><li>не гаснет при разговоре</li></ul><p style="margin-top:12px;color:var(--muted);font-size:13.5px" class="mono">OLED с рамой и без • калибровка • от 3 500 ₽</p><div class="pop"><div>A15 / A25 <b>от 5 500 ₽</b></div><div>S24 / S24 Ultra <b>от 13 500 ₽</b></div><div>Z Fold 5 <b>от 53 500 ₽</b></div><a href="#price">Подобрать по модели ↓</a></div></div>
 <div class="card reveal"><div class="icon">🔋</div><h3>Аккумулятор</h3><ul><li>быстро садится</li><li>греется / не заряжается</li><li>плохой контакт</li></ul></div>
 <div class="card reveal"><div class="icon">🏠</div><h3>Корпус</h3><ul><li>задняя крышка треснула</li><li>царапины / разбит полностью</li></ul></div>
-<div class="card reveal"><div class="icon">📶</div><h3>Общие проблемы</h3><ul><li>не работает Wi-Fi / SIM</li><li>попала влага</li><li>динамик, камера</li></ul></div>
+<div class="card reveal"><div class="icon">📶</div><h3>Общие проблемы</h3><ul><li>не работает Wi-Fi / SIM</li><li>попала влага</li><li>динамик, камера</li><li>кнопки Home, громкость, включение</li></ul></div>
 <div class="card reveal"><div class="icon">🔌</div><h3>Разъёмы</h3><ul><li>не заряжается</li><li>наушники / ПК не видит</li></ul></div>
-<div class="card wide reveal"><div class="icon">🎛️</div><div><h3>Кнопки: Home, громкость, включение</h3><p style="color:#B7BFCF;font-size:14px">Меняем шлейфы и толкатели, чистим контакты. Чаще всего — в день обращения, при вас.</p></div></div>
+
 </div>
 </section>
 

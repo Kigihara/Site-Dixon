@@ -31,6 +31,8 @@ td button{padding:7px 12px;font-size:12.5px}
 .stat span{font-size:12px;color:var(--muted)}
 button.danger{background:transparent;border:1px solid #FF7A7A;color:#FF7A7A}
 tr.fresh{box-shadow:inset 3px 0 var(--lime)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(16px);background:var(--lime);color:#111;font-weight:800;padding:13px 22px;border-radius:12px;opacity:0;pointer-events:none;transition:.3s;z-index:99;font-size:14px}
+#toast.show{opacity:1;transform:translateX(-50%)}
 .live{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
 @media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}
 a.back{color:var(--lime);font-size:14px}
@@ -49,6 +51,7 @@ a.back{color:var(--lime);font-size:14px}
 </div>
 <div class="bar" id="bar" style="display:none"><input id="q" placeholder="Поиск: имя, телефон, тема"><button class="ghost" id="reload">Обновить</button><button class="ghost" id="csv">Скачать CSV</button><button class="ghost" id="blank">Бланк гарантии</button><label class="live"><input type="checkbox" id="live" checked> live</label><span class="count" id="count"></span></div>
 <table id="tbl" style="display:none"><thead><tr><th>#</th><th>Когда</th><th>Имя</th><th>Телефон</th><th>Тема</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+<div id="toast"></div>
 <p style="margin-top:22px"><a class="back" href="/">← На сайт</a></p>
 <script>
 if(location.protocol==='file:')document.getElementById('err').textContent='Откройте страницу через сервер: запустите start.bat, затем http://127.0.0.1:8099/admin.html';
@@ -106,13 +109,24 @@ async function load(){
     $("tbl").style.display="";$("bar").style.display="";
   }catch(e){$("err").textContent="Ошибка: "+e.message}
 }
-$("go").onclick=()=>{token=$("tok").value.trim();if(token)load()};
+$("go").onclick=()=>{token=$("tok").value.trim();if(token){load();connectLive()}};
 $("tok").addEventListener("keydown",e=>{if(e.key==="Enter")$("go").click()});
 $("reload").onclick=load;
 $("q").addEventListener("input",render);
 $("csv").onclick=()=>{location.href="/api/leads.csv?token="+encodeURIComponent(token)};
 $("blank").onclick=()=>{open("/garantiya.html","_blank")};
 setInterval(()=>{const lv=document.querySelector('#live');if(lv&&lv.checked&&token)load()},30000);
+let esToast=null;
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(esToast);esToast=setTimeout(()=>t.classList.remove("show"),4000)}
+function connectLive(){
+  try{
+    const src=new EventSource("/api/events?token="+encodeURIComponent(token));
+    src.addEventListener("lead:new",e=>{try{const d=JSON.parse(e.data);toast("Новая заявка №"+d.id)}catch(_){}load()});
+    src.addEventListener("lead:update",()=>load());
+    src.addEventListener("lead:delete",()=>load());
+    src.onerror=()=>{src.close()};
+  }catch(e){}
+}
 </script>
 </body>
 </html>

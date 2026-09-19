@@ -1,0 +1,13 @@
+{
+  "name": "dixon-site",
+  "version": "1.4.0",
+  "description": "DIXON service center site + backend (zero deps)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
