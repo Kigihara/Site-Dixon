@@ -62,6 +62,31 @@ function saveLeads() {
   fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2));
 }
 const SEC_HEADERS = { "X-Content-Type-Options": "nosniff", "X-Frame-Options": "SAMEORIGIN", "Referrer-Policy": "no-referrer" };
+// Strict CSP: only own files + hashed inline scripts/styles (computed at boot).
+function pageCspHashes() {
+  const scripts = [], styles = [];
+  let dir = [];
+  try { dir = fs.readdirSync(ROOT); } catch (e) { return { scripts, styles }; }
+  for (const f of dir) {
+    if (!f.endsWith(".html")) continue;
+    let html = "";
+    try { html = fs.readFileSync(path.join(ROOT, f), "utf8"); } catch (e) { continue; }
+    const reJs = /<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g;
+    const reCss = /<style[^>]*>([\s\S]*?)<\/style>/g;
+    let m;
+    while ((m = reJs.exec(html))) {
+      if (!m[1].trim()) continue;
+      scripts.push("'sha256-" + crypto.createHash("sha256").update(m[1], "utf8").digest("base64") + "'");
+    }
+    while ((m = reCss.exec(html))) {
+      if (!m[1].trim()) continue;
+      styles.push("'sha256-" + crypto.createHash("sha256").update(m[1], "utf8").digest("base64") + "'");
+    }
+  }
+  return { scripts, styles };
+}
+const _cspHashes = pageCspHashes();
+const CSP = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' data:; style-src 'self' " + _cspHashes.styles.join(" ") + "; script-src 'self' " + _cspHashes.scripts.join(" ");
 
 // ---- live queue (in-memory, slow random walk) ----
 const status = { queue: 6, waitMin: 130 };
@@ -117,10 +142,18 @@ function normalizePhone(raw) {
   if (d && !d.startsWith("7")) d = "7" + d;
   return /^7\d{10}$/.test(d) ? "+" + d : null;
 }
-function checkAdmin(req, url) {
-  const q = url.searchParams.get("token");
+// brute-force guard for admin endpoints: 10 bad tries -> 10 min lockout per IP
+const authFails = new Map();
+function requireAdmin(req, url, res, ip, allowQuery) {
+  const f = authFails.get(ip);
+  if (f && f.until > Date.now()) return (send(res, 429, { ok: false, error: "locked" }), false);
   const h = req.headers["x-admin-token"];
-  return q === ADMIN_TOKEN || h === ADMIN_TOKEN;
+  const q = allowQuery ? url.searchParams.get("token") : null;
+  if (h === ADMIN_TOKEN || q === ADMIN_TOKEN) { authFails.delete(ip); return true; }
+  const n = (f ? f.n : 0) + 1;
+  authFails.set(ip, n >= 10 ? { n: 0, until: Date.now() + 10 * 60 * 1000 } : { n, until: 0 });
+  send(res, 403, { ok: false, error: "forbidden" });
+  return false;
 }
 function serveStatic(req, res, pathname) {
   let p = decodeURIComponent(pathname);
@@ -133,13 +166,14 @@ function serveStatic(req, res, pathname) {
       if (pathname.startsWith("/api/")) return send(res, 404, { ok: false, error: "not found" });
       fs.readFile(path.join(ROOT, "404.html"), (e2, d2) => {
         if (e2) { res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" }); res.end("404"); return; }
-        res.writeHead(404, Object.assign({ "Content-Type": "text/html; charset=utf-8" }, SEC_HEADERS));
+        res.writeHead(404, Object.assign({ "Content-Type": "text/html; charset=utf-8", "Content-Security-Policy": CSP }, SEC_HEADERS));
         res.end(d2);
       });
       return;
     }
     const ext = path.extname(f);
     const headers = Object.assign({ "Content-Type": MIME[ext] || "application/octet-stream" }, SEC_HEADERS);
+    if (ext === ".html") headers["Content-Security-Policy"] = CSP;
     if (ext === ".html") headers["Cache-Control"] = "no-store";
     res.writeHead(200, headers);
     res.end(d);
@@ -180,7 +214,7 @@ const server = http.createServer(async (req, res) => {
       if (String(body.company || "").trim() !== "") return send(res, 200, { ok: true, id: 0, quiet: true }); // honeypot: pretend success
       const dupe = leads.find((l) => l.phone === phone && l.topic === topic && (Date.now() - new Date(l.ts).getTime()) < 10 * 60 * 1000);
       if (dupe) return send(res, 200, { ok: true, id: dupe.id, duplicate: true });
-      const lead = { id: nextId++, ts: new Date().toISOString(), name, phone, topic, done: false, ip };
+      const lead = { id: nextId++, ts: new Date().toISOString(), name, phone, topic, done: false };
       leads.push(lead);
       saveLeads();
       broadcast("lead:new", { id: lead.id, name, phone, topic, ts: lead.ts });
@@ -190,23 +224,12 @@ const server = http.createServer(async (req, res) => {
       }
       return send(res, 200, { ok: true, id: lead.id });
     }
-    if (req.method === "POST" && url.pathname === "/api/track") {
-      if (rateLimited(ip)) return send(res, 429, { ok: false, error: "Слишком много запросов. Попробуйте через минуту." });
-      let body;
-      try { body = JSON.parse(await readBody(req, 20 * 1024)); }
-      catch (e) { return send(res, 400, { ok: false, error: "Некорректный запрос." }); }
-      const id = Number(body.id);
-      const phone = normalizePhone(body.phone);
-      const lead = leads.find((l) => l.id === id && l.phone === phone);
-      if (!lead) return send(res, 404, { ok: false, error: "Заявка не найдена. Проверьте номер и телефон." });
-      return send(res, 200, { ok: true, id: lead.id, done: lead.done, ts: lead.ts, topic: lead.topic });
-    }
     if (req.method === "GET" && url.pathname === "/api/leads") {
-      if (!checkAdmin(req, url)) return send(res, 403, { ok: false, error: "forbidden" });
+      if (!requireAdmin(req, url, res, ip)) return;
       return send(res, 200, { ok: true, leads: [...leads].reverse() });
     }
     if (req.method === "PATCH" && url.pathname.startsWith("/api/leads/")) {
-      if (!checkAdmin(req, url)) return send(res, 403, { ok: false, error: "forbidden" });
+      if (!requireAdmin(req, url, res, ip)) return;
       const id = Number(url.pathname.split("/").pop());
       const lead = leads.find((l) => l.id === id);
       if (!lead) return send(res, 404, { ok: false, error: "not found" });
@@ -219,7 +242,7 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, lead });
     }
     if (req.method === "GET" && url.pathname === "/api/stats") {
-      if (!checkAdmin(req, url)) return send(res, 403, { ok: false, error: "forbidden" });
+      if (!requireAdmin(req, url, res, ip)) return;
       const today = new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Moscow", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
       const byTopic = {};
       let open = 0, todayN = 0;
@@ -234,7 +257,7 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, total: leads.length, open, done: leads.length - open, today: todayN, byTopic });
     }
     if (req.method === "GET" && url.pathname === "/api/leads.csv") {
-      if (!checkAdmin(req, url)) return send(res, 403, { ok: false, error: "forbidden" });
+      if (!requireAdmin(req, url, res, ip)) return;
       const esc = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
       const rows = ["id,ts,name,phone,topic,done"];
       for (const l of [...leads].reverse()) rows.push([l.id, l.ts, esc(l.name), l.phone, esc(l.topic), l.done ? 1 : 0].join(","));
@@ -243,7 +266,7 @@ const server = http.createServer(async (req, res) => {
       return res.end(body);
     }
     if (req.method === "DELETE" && url.pathname.startsWith("/api/leads/")) {
-      if (!checkAdmin(req, url)) return send(res, 403, { ok: false, error: "forbidden" });
+      if (!requireAdmin(req, url, res, ip)) return;
       const id = Number(url.pathname.split("/").pop());
       const i = leads.findIndex((l) => l.id === id);
       if (i === -1) return send(res, 404, { ok: false, error: "not found" });
@@ -253,7 +276,7 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true });
     }
     if (req.method === "GET" && url.pathname === "/api/events") {
-      if (!checkAdmin(req, url)) return send(res, 403, { ok: false, error: "forbidden" });
+      if (!requireAdmin(req, url, res, ip, true)) return; // EventSource cannot send headers: query token only here
       res.writeHead(200, Object.assign({ "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-cache", "Connection": "keep-alive" }, SEC_HEADERS));
       res.write(": connected\n\n");
       sseClients.add(res);
@@ -269,4 +292,5 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
+if (ADMIN_TOKEN === "dixon-12345") console.log("WARNING: default ADMIN_TOKEN in use — set a strong ADMIN_TOKEN env on any public server!");
 server.listen(PORT, process.env.HOST || "127.0.0.1", () => console.log("DIXON backend on http://127.0.0.1:" + PORT + " (public/, data/)"));

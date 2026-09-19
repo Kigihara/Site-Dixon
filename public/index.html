@@ -225,6 +225,19 @@ section.block{scroll-margin-top:70px}
 .calc-out{background:rgba(200,255,46,.06);border:1px solid rgba(200,255,46,.35);border-radius:14px;padding:15px 18px;font-size:15px}
 .calc-out b{color:var(--lime);font-family:var(--font-m);font-size:18px}
 .calc-out .go{display:inline-block;margin-top:8px;color:var(--lime);font-weight:800;font-size:13.5px;cursor:pointer}
+/* CSP-safe replacements for former inline styles */
+.d2{animation-delay:-1.5s}
+.fine{margin-top:12px;color:var(--muted);font-size:13.5px}
+.eyebrow-dark{color:#0E1218;border-color:#0E1218;background:transparent}
+.psub{color:#4B5563;max-width:70ch}
+.tscroll{overflow:auto}
+#symOut{margin-top:10px;color:var(--lime);font-size:13px}
+.quiz-alt{background:#fff;color:#111}
+.quiz-alt h4{color:#111}
+.quiz-alt p{font-size:14px;color:#4B5563}
+.quiz-alt a{margin-top:12px}
+#formOk{font-size:12.5px;color:var(--lime)}
+.mini{font-size:12.5px;color:var(--muted)}
 @media(max-width:1150px){.calc-grid{grid-template-columns:1fr}}
 /* sticky mobile call bar */
 .callbar{display:none}
@@ -270,7 +283,6 @@ section.block{scroll-margin-top:70px}
  .rev-grid{grid-template-columns:1fr}
 }
 @media(max-width:640px){
- #trackForm{grid-template-columns:1fr!important}
  .callbar{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:60;background:var(--lime);color:#111;border-radius:16px;padding:15px;justify-content:center;font-weight:800;font-size:15px}
  footer{padding-bottom:96px}
  #toTop{bottom:78px;right:14px}
@@ -331,7 +343,7 @@ section.block{scroll-margin-top:70px}
 <div class="chips-row"><span class="chip">Дисплей S24 Ultra — <b>от 13 500 ₽</b></span><span class="chip">АКБ с работой — <b>от 4 200 ₽</b></span><span class="chip">Гарантия — <b>до 12 месяцев</b></span></div>
 <div class="lab-bottom">
 <div class="meter">Оригинал OLED<div class="bar"><i></i></div></div>
-<div class="meter">Склад: 240+ деталей<div class="bar"><i style="animation-delay:-1.5s"></i></div></div>
+<div class="meter">Склад: 240+ деталей<div class="bar"><i class="d2"></i></div></div>
 </div>
 </div>
 </div>
@@ -347,7 +359,7 @@ section.block{scroll-margin-top:70px}
 <section class="block wrap" id="fix">
 <div class="sec-head reveal"><h2>Что ломается — то и чиним. Без воды.</h2><p>Шесть направлений, по которым у нас всегда есть запчасти и оснастка. Выберите свою проблему — дальше подскажем цену.</p></div>
 <div class="bento">
-<div class="card big reveal"><span class="tag">ХИТ • 41% ОБРАЩЕНИЙ</span><div class="icon">📱</div><h3>Замена и ремонт экрана</h3><ul><li>разбилось стекло / трещины</li><li>не работает сенсор или часть экрана</li><li>нет подсветки</li><li>не гаснет при разговоре</li></ul><p style="margin-top:12px;color:var(--muted);font-size:13.5px" class="mono">OLED с рамой и без • калибровка • от 3 500 ₽</p><div class="pop"><div>A15 / A25 <b>от 5 500 ₽</b></div><div>S24 / S24 Ultra <b>от 13 500 ₽</b></div><div>Z Fold 5 <b>от 53 500 ₽</b></div><a href="#price">Подобрать по модели ↓</a></div></div>
+<div class="card big reveal"><span class="tag">ХИТ • 41% ОБРАЩЕНИЙ</span><div class="icon">📱</div><h3>Замена и ремонт экрана</h3><ul><li>разбилось стекло / трещины</li><li>не работает сенсор или часть экрана</li><li>нет подсветки</li><li>не гаснет при разговоре</li></ul><p class="mono fine">OLED с рамой и без • калибровка • от 3 500 ₽</p><div class="pop"><div>A15 / A25 <b>от 5 500 ₽</b></div><div>S24 / S24 Ultra <b>от 13 500 ₽</b></div><div>Z Fold 5 <b>от 53 500 ₽</b></div><a href="#price">Подобрать по модели ↓</a></div></div>
 <div class="card reveal"><div class="icon">🔋</div><h3>Аккумулятор</h3><ul><li>быстро садится</li><li>греется / не заряжается</li><li>плохой контакт</li></ul></div>
 <div class="card reveal"><div class="icon">🏠</div><h3>Корпус</h3><ul><li>задняя крышка треснула</li><li>царапины / разбит полностью</li></ul></div>
 <div class="card reveal"><div class="icon">📶</div><h3>Общие проблемы</h3><ul><li>не работает Wi-Fi / SIM</li><li>попала влага</li><li>динамик, камера</li><li>кнопки Home, громкость, включение</li></ul></div>
@@ -368,14 +380,14 @@ section.block{scroll-margin-top:70px}
 
 <section class="block wrap" id="price">
 <div class="price-box reveal">
-<span class="eyebrow" style="color:#0E1218;border-color:#0E1218;background:transparent">ПРАЙС • SAMSUNG GALAXY</span>
+<span class="eyebrow eyebrow-dark">ПРАЙС • SAMSUNG GALAXY</span>
 <h2>Честные цены с работой. Найдите свою модель.</h2>
-<p style="color:#4B5563;max-width:70ch">Стоимость указана на чёрный цвет, на другие цвета может отличаться. Точную цену и наличие уточняйте по телефону <b>8 (8352) 36-42-02</b>.</p>
+<p class="psub">Стоимость указана на чёрный цвет, на другие цвета может отличаться. Точную цену и наличие уточняйте по телефону <b>8 (8352) 36-42-02</b>.</p>
 <div class="price-tools">
 <label class="search"><span aria-hidden="true">🔍</span> <input id="q" placeholder="Например: S24, A55, Z Fold…" aria-label="Поиск модели"></label>
 <div class="chips"><button class="chipbtn active" data-f="all">Все</button><button class="chipbtn" data-f="A">Galaxy A / M</button><button class="chipbtn" data-f="S">Galaxy S</button><button class="chipbtn" data-f="Z">Fold / Flip</button></div>
 </div>
-<div style="overflow:auto">
+<div class="tscroll">
 <table id="ptable"><thead><tr><th>Модель</th><th>Дисплей с работой</th><th>АКБ с работой</th><th>Задняя крышка</th></tr></thead><tbody>
 <tr data-g="A"><td>A15 SM-A155F</td><td class="num">5 500 ₽</td><td class="num">4 200 ₽</td><td class="num">2 100 ₽</td></tr>
 <tr data-g="A"><td>A25 SM-A256E</td><td class="num">6 800 ₽</td><td class="num">4 400 ₽</td><td class="num">2 200 ₽</td></tr>
@@ -394,8 +406,8 @@ section.block{scroll-margin-top:70px}
 </div>
 <p class="note">* для Fold / Flip — замена двух АКБ. Полный прайс на 130+ моделей — у администратора. Это лишь популярные позиции с dixon-sc.ru.</p>
 <div class="quiz">
-<div class="quiz-card"><h4>⚡ Экспресс-оценка: что случилось?</h4><select id="sym" aria-label="Что случилось"><option value="screen">Разбит экран / не работает сенсор</option><option value="bat">Быстро садится / не заряжается</option><option value="back">Треснула задняя крышка</option><option value="water">Попала влага / не видит SIM</option></select><button id="symBtn">Показать ориентир →</button><p id="symOut" class="mono" style="margin-top:10px;color:var(--lime);font-size:13px"></p></div>
-<div class="quiz-card" style="background:#fff;color:#111"><h4 style="color:#111">📞 Не нашли модель? Пришлите фото поломки</h4><p style="font-size:14px;color:#4B5563">Ответим за 10 минут в рабочее время и назовём точную цену с работой.</p><a class="btn btn-lime" style="margin-top:12px" href="tel:+78352364202">Позвонить сейчас</a></div>
+<div class="quiz-card"><h4>⚡ Экспресс-оценка: что случилось?</h4><select id="sym" aria-label="Что случилось"><option value="screen">Разбит экран / не работает сенсор</option><option value="bat">Быстро садится / не заряжается</option><option value="back">Треснула задняя крышка</option><option value="water">Попала влага / не видит SIM</option></select><button id="symBtn">Показать ориентир →</button><p id="symOut" class="mono"></p></div>
+<div class="quiz-card quiz-alt"><h4>📞 Не нашли модель? Пришлите фото поломки</h4><p>Ответим за 10 минут в рабочее время и назовём точную цену с работой.</p><a class="btn btn-lime" href="tel:+78352364202">Позвонить сейчас</a></div>
 </div>
 </div>
 </section>
@@ -443,7 +455,7 @@ section.block{scroll-margin-top:70px}
 <section class="block wrap" id="contacts">
 <div class="sec-head reveal"><span class="eyebrow">КОНТАКТЫ • ЖИВАЯ ОЧЕРЕДЬ</span><h2>Приезжайте — посмотрим при вас</h2></div>
 <div class="contact-grid">
-<div class="c-card reveal" style="grid-column:1/-1"><h3>Проверить статус заявки</h3><form class="calc" id="trackForm" style="grid-template-columns:1fr 1fr auto;align-items:end"><input id="trackId" placeholder="Номер заявки" inputmode="numeric" aria-label="Номер заявки"><input id="trackPhone" placeholder="Телефон из заявки" inputmode="tel" aria-label="Телефон из заявки"><button class="btn btn-ghost" type="submit">Статус →</button></form><p class="mono" id="trackOut" style="font-size:13px;color:var(--lime);margin-top:10px"></p></div>
+
 <div class="c-card reveal"><h3>DIXON • Чебоксары</h3>
 <div class="c-line">📍<div>ул. Калинина, 91к1<small>вход с торца, вывеска DIXON • парковка во дворе</small></div></div>
 <div class="c-line">📞<div><a class="tel" href="tel:+78352364202">8 (8352) 36-42-02</a><small>ежедневно 9:00–20:00 • <span id="msk">--:--</span> МСК</small></div></div>
@@ -452,7 +464,7 @@ section.block{scroll-margin-top:70px}
 <div class="hours" id="hoursLine">● сегодня принимаем до 19:30</div>
 </div>
 <div class="c-card reveal"><h3>Оставить заявку — перезвоним за 10 минут</h3>
-<form class="calc" id="leadForm"><input required placeholder="Ваше имя" name="n" id="leadName" aria-label="Ваше имя" autocomplete="name"><input required placeholder="Телефон" name="p" id="leadPhone" aria-label="Телефон" inputmode="tel" autocomplete="tel"><input name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"><select name="t" id="leadTopic" aria-label="Тема обращения"><option>Разбит экран</option><option>Аккумулятор</option><option>Корпус / крышка</option><option>Не заряжается / разъём</option><option>Другое</option></select><label class="cons"><input type="checkbox" id="leadConsent" checked><span>Согласен на обработку персональных данных</span></label><details class="priv"><summary>Как мы храним данные</summary><p>Имя и телефон хранятся только на компьютере сервиса в Чебоксарах и нужны исключительно для обратного звонка. Никому не передаём, удалим по первой просьбе — позвоните 36-42-02.</p></details><button class="btn btn-lime" type="submit">Жду звонка →</button><p class="mono" id="formOk" style="font-size:12.5px;color:var(--lime)"></p></form>
+<form class="calc" id="leadForm"><input required placeholder="Ваше имя" name="n" id="leadName" aria-label="Ваше имя" autocomplete="name"><input required placeholder="Телефон" name="p" id="leadPhone" aria-label="Телефон" inputmode="tel" autocomplete="tel"><input name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"><select name="t" id="leadTopic" aria-label="Тема обращения"><option>Разбит экран</option><option>Аккумулятор</option><option>Корпус / крышка</option><option>Не заряжается / разъём</option><option>Другое</option></select><label class="cons"><input type="checkbox" id="leadConsent" checked><span>Согласен на обработку персональных данных</span></label><details class="priv"><summary>Как мы храним данные</summary><p>Имя и телефон хранятся только на компьютере сервиса в Чебоксарах и нужны исключительно для обратного звонка. Никому не передаём, удалим по первой просьбе — позвоните 36-42-02.</p></details><button class="btn btn-lime" type="submit">Жду звонка →</button><p class="mono" id="formOk"></p></form>
 </div>
 </div>
 </section>
@@ -496,15 +508,15 @@ const lines=['> calibrating touch… ok','> sealing + pressure test… ok','> re
 if(matchMedia('(pointer:fine)').matches){document.querySelectorAll('[data-magnet]').forEach(b=>{b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.12}px,${(e.clientY-r.top-r.height/2)*.18}px)`});b.addEventListener('mouseleave',()=>b.style.transform='')})}
 // form
 document.getElementById('leadForm').addEventListener('submit',async e=>{e.preventDefault();const ok=document.getElementById('formOk');const fd=new FormData(e.target);const checked=document.getElementById('leadConsent').checked;if(!checked){ok.textContent='⚠ Поставьте согласие на обработку данных.';return}const body={name:String(fd.get('n')||'').trim(),phone:String(fd.get('p')||'').trim(),topic:fd.get('t'),company:String(fd.get('company')||''),consent:true};ok.textContent='Отправляем…';try{const r=await fetch('api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!j.ok)throw new Error(j.error||'error');if(j.id===0){ok.textContent='✓ Заявка принята. Перезвоним в течение 10 минут в рабочее время.'}else{ok.textContent='✓ Заявка №'+j.id+' принята. Перезвоним в течение 10 минут в рабочее время.'}e.target.reset()}catch(err){const m=String((err&&err.message)||'');ok.textContent=(m&&!/Failed to fetch|NetworkError|Load failed/i.test(m))?('⚠ '+m):'Не получилось отправить. Позвоните нам: 8 (8352) 36-42-02.'}});
-// lead tracker
-const tf=document.getElementById('trackForm');
+// lead tracker removed (1C handles statuses)
+const tf=null;
 if(tf)tf.addEventListener('submit',async e=>{e.preventDefault();const o=document.getElementById('trackOut');o.textContent='Проверяем…';try{const r=await fetch('api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:document.getElementById('trackId').value,phone:document.getElementById('trackPhone').value})});const j=await r.json();if(!j.ok)throw new Error(j.error||'error');o.textContent='✓ Заявка №'+j.id+(j.done?' выполнена — можно забирать!':' принята и уже в работе.')}catch(err){const m=String((err&&err.message)||'');o.textContent=(m&&!/Failed to fetch|NetworkError|Load failed/i.test(m))?('⚠ '+m):'Нужен запущенный сервер: откройте start.bat в папке сайта.'}});
 // price calculator (data from backend)
 (async function(){const m=document.getElementById('calcModel'),j=document.getElementById('calcJob'),o=document.getElementById('calcOut');if(!m||!j||!o)return;let list=[];try{const r=await fetch('api/prices');const d=await r.json();list=d.prices||[];if(d.updated){const nn=document.querySelector('.price-box .note');if(nn&&!nn.dataset.stamped){nn.dataset.stamped='1';nn.innerHTML+=' Обновлено: '+d.updated+'.'}}}catch(e){o.textContent='Калькулятор требует запущенный сервер (start.bat). Цены — в таблице выше.';return}
 const fmt=n=>Number(n).toLocaleString('ru-RU')+' ₽';
 list.forEach((p,i)=>{const op=document.createElement('option');op.value=i;op.textContent=p.model;m.appendChild(op)});
 const topics={display:'Разбит экран',battery:'Аккумулятор',back:'Корпус / крышка'};
-function upd(){if(m.value===''){o.textContent='Выберите модель — покажем цену с работой.';return}const p=list[+m.value],k=j.value;let t=''+p.model+' — '+j.options[j.selectedIndex].text+': <b>'+fmt(p[k])+'</b>';if(p.note)t+='<br><span style="font-size:12.5px;color:var(--muted)">Fold/Flip: пара АКБ меняется сразу.</span>';t+='<br><span class="go" id="calcGo">Оставить заявку на этот ремонт →</span>';o.innerHTML=t;document.getElementById('calcGo').onclick=()=>{const s=document.getElementById('leadTopic');if(s)s.value=topics[k];document.querySelector('#contacts').scrollIntoView({behavior:'smooth'})}}
+function upd(){if(m.value===''){o.textContent='Выберите модель — покажем цену с работой.';return}const p=list[+m.value],k=j.value;let t=''+p.model+' — '+j.options[j.selectedIndex].text+': <b>'+fmt(p[k])+'</b>';if(p.note)t+='<br><span class="mini">Fold/Flip: пара АКБ меняется сразу.</span>';t+='<br><span class="go" id="calcGo">Оставить заявку на этот ремонт →</span>';o.innerHTML=t;document.getElementById('calcGo').onclick=()=>{const s=document.getElementById('leadTopic');if(s)s.value=topics[k];document.querySelector('#contacts').scrollIntoView({behavior:'smooth'})}}
 m.onchange=upd;j.onchange=upd;})();
 // burger menu
 const bg=document.getElementById('burger'),mm=document.getElementById('mmenu');
@@ -521,7 +533,8 @@ document.querySelectorAll('[data-gis]').forEach(a=>{a.href='https://2gis.ru/sear
 document.querySelectorAll('.faq-item>button').forEach(b=>b.setAttribute('aria-expanded','false'));
 document.querySelectorAll('.faq-item>button').forEach(b=>b.onclick=()=>{const it=b.parentElement,ans=it.querySelector('.ans'),was=it.classList.contains('open');document.querySelectorAll('.faq-item.open').forEach(o=>{o.classList.remove('open');o.querySelector('.ans').style.maxHeight=null});document.querySelectorAll('.faq-item>button').forEach(x=>x.setAttribute('aria-expanded','false'));if(!was){it.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px';b.setAttribute('aria-expanded','true')}});
 // phone mask +7 (___) ___-__-__
-document.querySelectorAll('input[name=p],#trackPhone').forEach(ph=>{ph.addEventListener('input',()=>{let d=ph.value.replace(/\D/g,'');if(d.startsWith('8'))d='7'+d.slice(1);if(d&&!d.startsWith('7'))d='7'+d;d=d.slice(0,11);let r='+7';if(d.length>1)r+=' ('+d.slice(1,4);if(d.length>=4)r+=')';if(d.length>4)r+=' '+d.slice(4,7);if(d.length>7)r+='-'+d.slice(7,9);if(d.length>9)r+='-'+d.slice(9,11);ph.value=d.length<=1?'+7':r})});
+const ph=document.querySelector('input[name=p]');
+if(ph)ph.addEventListener('input',()=>{let d=ph.value.replace(/\D/g,'');if(d.startsWith('8'))d='7'+d.slice(1);if(d&&!d.startsWith('7'))d='7'+d;d=d.slice(0,11);let r='+7';if(d.length>1)r+=' ('+d.slice(1,4);if(d.length>=4)r+=')';if(d.length>4)r+=' '+d.slice(4,7);if(d.length>7)r+='-'+d.slice(7,9);if(d.length>9)r+='-'+d.slice(9,11);ph.value=d.length<=1?'+7':r});
 // back to top
 const tt=document.getElementById('toTop');
 if(tt){addEventListener('scroll',()=>tt.classList.toggle('show',scrollY>900),{passive:true});tt.onclick=()=>scrollTo({top:0,behavior:'smooth'})}
