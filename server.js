@@ -18,6 +18,8 @@ const STARTED_AT = Date.now();
 const TOPICS = ["Разбит экран", "Аккумулятор", "Корпус / крышка", "Не заряжается / разъём", "Другое"];
 
 // Mirror of the price table on the site (rubles, work included).
+// Bump PRICES_UPDATED whenever prices change — the site shows it.
+const PRICES_UPDATED = "2026-09-20";
 const PRICES = [
   { model: "A15 SM-A155F", group: "A", display: 5500, battery: 4200, back: 2100 },
   { model: "A25 SM-A256E", group: "A", display: 6800, battery: 4400, back: 2200 },
@@ -114,6 +116,7 @@ function checkAdmin(req, url) {
 function serveStatic(req, res, pathname) {
   let p = decodeURIComponent(pathname);
   if (p === "/") p = "/index.html";
+  if (p === "/favicon.ico") p = "/icon.svg";
   const f = path.normalize(path.join(ROOT, p));
   if (!f.startsWith(ROOT)) { res.writeHead(403); res.end("no"); return; }
   fs.readFile(f, (e, d) => {
@@ -151,7 +154,7 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, queue: status.queue, waitMin: status.waitMin, open: h >= 9 && h < 20 });
     }
     if (req.method === "GET" && url.pathname === "/api/prices") {
-      return send(res, 200, { ok: true, prices: PRICES });
+      return send(res, 200, { ok: true, updated: PRICES_UPDATED, prices: PRICES });
     }
     if (req.method === "POST" && url.pathname === "/api/lead") {
       if (rateLimited(ip)) return send(res, 429, { ok: false, error: "Слишком много заявок. Попробуйте через минуту." });

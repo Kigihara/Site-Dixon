@@ -47,7 +47,7 @@ a.back{color:var(--lime);font-size:14px}
 <div class="stat"><b><em id="stDone">0</em></b><span>завершено</span></div>
 <div class="stat"><b><em id="stToday">0</em></b><span>сегодня</span></div>
 </div>
-<div class="bar" id="bar" style="display:none"><input id="q" placeholder="Поиск: имя, телефон, тема"><button class="ghost" id="reload">Обновить</button><button class="ghost" id="csv">Скачать CSV</button><label class="live"><input type="checkbox" id="live" checked> live</label><span class="count" id="count"></span></div>
+<div class="bar" id="bar" style="display:none"><input id="q" placeholder="Поиск: имя, телефон, тема"><button class="ghost" id="reload">Обновить</button><button class="ghost" id="csv">Скачать CSV</button><button class="ghost" id="blank">Бланк гарантии</button><label class="live"><input type="checkbox" id="live" checked> live</label><span class="count" id="count"></span></div>
 <table id="tbl" style="display:none"><thead><tr><th>#</th><th>Когда</th><th>Имя</th><th>Телефон</th><th>Тема</th><th></th></tr></thead><tbody id="rows"></tbody></table>
 <p style="margin-top:22px"><a class="back" href="/">← На сайт</a></p>
 <script>
@@ -111,6 +111,7 @@ $("tok").addEventListener("keydown",e=>{if(e.key==="Enter")$("go").click()});
 $("reload").onclick=load;
 $("q").addEventListener("input",render);
 $("csv").onclick=()=>{location.href="/api/leads.csv?token="+encodeURIComponent(token)};
+$("blank").onclick=()=>{open("/garantiya.html","_blank")};
 setInterval(()=>{const lv=document.querySelector('#live');if(lv&&lv.checked&&token)load()},30000);
 </script>
 </body>
