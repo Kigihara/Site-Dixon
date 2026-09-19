@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23C8FF2E'/%3E%3Ctext x='16' y='23' font-size='18' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%23111'%3ED%3C/text%3E%3C/svg%3E">
+<title>DIXON — заявки</title>
+<style>
+:root{--bg:#0B0E13;--surface:#121722;--line:rgba(255,255,255,.11);--lime:#C8FF2E;--muted:#9AA3B5}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:#EDEFF3;font-family:system-ui,sans-serif;padding:28px;max-width:1000px;margin:0 auto}
+h1{font-size:24px;margin-bottom:4px}h1 span{color:var(--lime)}
+p.sub{color:var(--muted);font-size:14px;margin-bottom:20px}
+.gate,.bar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+input,button{font:inherit;border-radius:12px;padding:12px 16px}
+input{background:#0D121B;border:1px solid var(--line);color:#fff;flex:1;min-width:200px}
+button{background:var(--lime);border:none;font-weight:800;cursor:pointer;color:#111}
+button.ghost{background:transparent;border:1px solid var(--line);color:#fff}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11px;letter-spacing:.08em;color:var(--muted);padding:10px;border-bottom:1px solid var(--line)}
+td{padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+tr.done td{opacity:.45;text-decoration:line-through}
+tr.done td:last-child{text-decoration:none}
+td button{padding:7px 12px;font-size:12.5px}
+.err{color:#FF7A7A;font-size:14px;margin-bottom:12px}
+.count{font-size:13px;color:var(--muted);margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{font-size:24px;display:block}.stat b em{font-style:normal;color:var(--lime)}
+.stat span{font-size:12px;color:var(--muted)}
+button.danger{background:transparent;border:1px solid #FF7A7A;color:#FF7A7A}
+tr.fresh{box-shadow:inset 3px 0 var(--lime)}
+.live{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}
+a.back{color:var(--lime);font-size:14px}
+</style>
+</head>
+<body>
+<h1>DIXON <span>• заявки</span></h1>
+<p class="sub">Служебная страница. Токен задаётся переменной ADMIN_TOKEN.</p>
+<div class="gate" id="gate"><input id="tok" type="password" placeholder="Токен доступа" autocomplete="off"><button id="go">Войти</button></div>
+<div class="err" id="err"></div>
+<div class="stats" id="stats" style="display:none">
+<div class="stat"><b><em id="stTotal">0</em></b><span>всего заявок</span></div>
+<div class="stat"><b><em id="stOpen">0</em></b><span>новые</span></div>
+<div class="stat"><b><em id="stDone">0</em></b><span>завершено</span></div>
+<div class="stat"><b><em id="stToday">0</em></b><span>сегодня</span></div>
+</div>
+<div class="bar" id="bar" style="display:none"><input id="q" placeholder="Поиск: имя, телефон, тема"><button class="ghost" id="reload">Обновить</button><button class="ghost" id="csv">Скачать CSV</button><label class="live"><input type="checkbox" id="live" checked> live</label><span class="count" id="count"></span></div>
+<table id="tbl" style="display:none"><thead><tr><th>#</th><th>Когда</th><th>Имя</th><th>Телефон</th><th>Тема</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+<p style="margin-top:22px"><a class="back" href="/">← На сайт</a></p>
+<script>
+if(location.protocol==='file:')document.getElementById('err').textContent='Откройте страницу через сервер: запустите start.bat, затем http://127.0.0.1:8099/admin.html';
+let token="";
+const $=id=>document.getElementById(id);
+async function api(path,opts){
+  opts=opts||{};opts.headers=Object.assign({"X-Admin-Token":token},opts.headers||{});
+  const r=await fetch(path,opts);
+  const j=await r.json();
+  if(!r.ok)throw new Error(j.error||("HTTP "+r.status));
+  return j;
+}
+function fmt(ts){try{return new Date(ts).toLocaleString("ru-RU",{timeZone:"Europe/Moscow"})}catch(e){return ts}}
+let allLeads=[];
+let lastMax=0;
+const baseTitle=document.title;
+function render(){
+  const q=$("q").value.trim().toLowerCase();
+  const tb=$("rows");tb.innerHTML="";
+  const list=allLeads.filter(l=>!q||l.name.toLowerCase().includes(q)||l.phone.includes(q)||l.topic.toLowerCase().includes(q));
+  $("count").textContent="Показано: "+list.length+" из "+allLeads.length;
+    list.forEach(l=>{
+      const tr=document.createElement("tr");
+      if(l.done)tr.className="done";
+      if(lastMax>0&&l.id>lastMax)tr.className+=(tr.className?" ":"")+"fresh";
+      tr.innerHTML="<td>"+l.id+"</td><td style='white-space:nowrap'>"+fmt(l.ts)+"</td><td></td><td style='white-space:nowrap'>"+l.phone+"</td><td></td><td style='white-space:nowrap'></td>";
+      tr.children[2].textContent=l.name;
+      tr.children[4].textContent=l.topic;
+      const b=document.createElement("button");
+      b.textContent=l.done?"Вернуть":"Готово";
+      b.onclick=async()=>{await api("/api/leads/"+l.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({done:!l.done})});load()};
+      const d=document.createElement("button");
+      d.textContent="✕";d.className="danger";d.title="Удалить";
+      d.onclick=async()=>{if(confirm("Удалить заявку №"+l.id+"?")){await api("/api/leads/"+l.id,{method:"DELETE"});load()}};
+      tr.children[5].appendChild(b);
+      tr.children[5].appendChild(document.createTextNode(" "));
+      tr.children[5].appendChild(d);
+      tb.appendChild(tr);
+  });
+}
+async function load(){
+  $("err").textContent="";
+  try{
+    const j=await api("/api/leads");
+    allLeads=j.leads;
+    render();
+    lastMax=Math.max(lastMax||0,...allLeads.map(l=>l.id),0);
+    try{
+      const s=await api("/api/stats");
+      $("stTotal").textContent=s.total;$("stOpen").textContent=s.open;
+      $("stDone").textContent=s.done;$("stToday").textContent=s.today;
+      $("stats").style.display="";
+      document.title=s.open>0?"("+s.open+") "+baseTitle:baseTitle;
+    }catch(e){}
+    $("tbl").style.display="";$("bar").style.display="";
+  }catch(e){$("err").textContent="Ошибка: "+e.message}
+}
+$("go").onclick=()=>{token=$("tok").value.trim();if(token)load()};
+$("tok").addEventListener("keydown",e=>{if(e.key==="Enter")$("go").click()});
+$("reload").onclick=load;
+$("q").addEventListener("input",render);
+$("csv").onclick=()=>{location.href="/api/leads.csv?token="+encodeURIComponent(token)};
+setInterval(()=>{const lv=document.querySelector('#live');if(lv&&lv.checked&&token)load()},30000);
+</script>
+</body>
+</html>

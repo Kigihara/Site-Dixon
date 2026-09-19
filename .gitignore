@@ -1,0 +1,10 @@
+# Playwright CLI output (may contain credentials)
+.playwright-cli/
+# Agent skills (tooling, not project code)
+.claude/
+# Backend runtime data (personal data!)
+data/
+*.log
+# Backend runtime data (personal data!)
+data/
+*.log

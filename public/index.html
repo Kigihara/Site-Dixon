@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIXON — Авторизованный сервисный центр Samsung в Чебоксарах</title>
+<meta name="description" content="DIXON — ремонт Samsung в Чебоксарах: экраны, аккумуляторы, корпуса, разъёмы. Оригинальные запчасти, гарантия, ремонт от 40 минут. Калинина, 91к1.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23C8FF2E'/%3E%3Ctext x='16' y='23' font-size='18' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%23111'%3ED%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#0B0E13">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="DIXON — ремонт Samsung в Чебоксарах за день">
+<meta property="og:description" content="Экраны, аккумуляторы, корпуса. Оригинальные запчасти, гарантия до 12 месяцев. Калинина, 91к1.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"DIXON — сервисный центр Samsung","telephone":"+7 8352 36-42-02","email":"manager@dixon-sc.ru","address":{"@type":"PostalAddress","addressLocality":"Чебоксары","streetAddress":"ул. Калинина, 91к1","addressCountry":"RU"},"openingHours":"Mo-Su 09:00-20:00","priceRange":"₽₽"}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0E13; --surface:#121722; --surface2:#171E2B; --line:rgba(255,255,255,.11);
+  --paper:#F2F3EF; --ink:#0E1218; --muted:#9AA3B5; --muted2:#6B7484;
+  --lime:#C8FF2E; --lime-ink:#101500; --radius:18px;
+  --font-d:'Unbounded',sans-serif; --font-b:'Manrope',sans-serif; --font-m:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:#EDEFF3;font-family:var(--font-b);overflow-x:hidden;line-height:1.6}
+::selection{background:var(--lime);color:#111}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.wrap{max-width:1360px;margin:0 auto;padding:0 28px}
+.mono{font-family:var(--font-m)}
+/* grain */
+.grain{position:fixed;inset:0;z-index:80;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* progress */
+.progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--lime);z-index:100}
+/* preloader */
+#loader{position:fixed;inset:0;background:#080A0F;z-index:200;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .6s,visibility .6s}
+#loader.done{opacity:0;visibility:hidden}
+#loader .num{font-family:var(--font-d);font-size:clamp(48px,8vw,96px);font-weight:800;color:var(--lime)}
+#loader .bar{width:min(420px,70vw);height:2px;background:rgba(255,255,255,.12);overflow:hidden}
+#loader .bar i{display:block;height:100%;width:0;background:var(--lime)}
+#loader p{font-family:var(--font-m);font-size:12px;letter-spacing:.14em;color:var(--muted)}
+/* header */
+header{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);background:rgba(11,14,19,.78);border-bottom:1px solid var(--line)}
+.nav{max-width:1360px;margin:0 auto;padding:0 28px;height:68px;display:flex;align-items:center;gap:26px}
+.logo{display:flex;align-items:center;gap:12px;font-family:var(--font-d);font-weight:800;letter-spacing:.04em}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--lime);color:#111;display:grid;place-items:center;font-weight:800;font-size:18px}
+.logo small{font-family:var(--font-m);font-size:10px;color:var(--muted);display:block;letter-spacing:.12em;font-weight:400}
+.nav-links{display:flex;gap:22px;margin-left:18px;font-size:14.5px;color:#C9CFDA}
+.nav-links a{opacity:.85}.nav-links a:hover{opacity:1;color:#fff}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.status-dot{display:flex;align-items:center;gap:8px;font-family:var(--font-m);font-size:12px;color:#B9C2D2;border:1px solid var(--line);padding:8px 12px;border-radius:999px}
+.status-dot i{width:8px;height:8px;border-radius:50%;background:#3DFF88;box-shadow:0 0 12px #3DFF88;animation:pulse 1.8s infinite}
+@keyframes pulse{50%{opacity:.4}}
+.btn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:14px 22px;font-weight:800;font-size:15px;border:1px solid transparent;cursor:pointer;transition:transform .25s cubic-bezier(.16,1,.3,1),background .25s,color .25s;white-space:nowrap}
+.btn-lime{background:var(--lime);color:var(--lime-ink)}
+.btn-lime:hover{transform:translateY(-2px)}
+.btn-ghost{border-color:var(--line);color:#fff;background:rgba(255,255,255,.04)}
+.btn-ghost:hover{background:rgba(255,255,255,.09);transform:translateY(-2px)}
+.btn:active{transform:translateY(1px) scale(.98)}
+.phone-big{font-family:var(--font-m);font-weight:700;font-size:15px}
+/* hero */
+.hero{position:relative;padding:66px 0 34px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:start}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-m);font-size:11.5px;letter-spacing:.16em;color:var(--lime);border:1px solid rgba(200,255,46,.35);padding:8px 14px;border-radius:999px;background:rgba(200,255,46,.07)}
+h1{font-family:var(--font-d);font-weight:800;line-height:.98;letter-spacing:-.02em;font-size:clamp(34px,5.2vw,72px);margin:22px 0 18px}
+h1 .stroke{color:transparent;-webkit-text-stroke:1.5px #fff}
+h1 .lime{color:var(--lime)}
+.lead{max-width:54ch;color:#B9C1D1;font-size:17px}
+.lead b{color:#fff}
+.hero-cta{display:flex;gap:12px;margin:26px 0;flex-wrap:wrap}
+.queue{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-family:var(--font-m);font-size:12.5px;color:#C7CEDB}
+.queue strong{color:var(--lime)}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.stat{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{font-family:var(--font-d);font-size:22px;display:block}
+.stat b em{font-style:normal;color:var(--lime)}
+.stat span{font-size:12.5px;color:var(--muted)}
+/* phone lab */
+.lab{position:relative;background:linear-gradient(180deg,#141B29,#0D1119);border:1px solid var(--line);border-radius:24px;padding:22px;overflow:hidden;min-height:560px}
+.lab-top{display:flex;justify-content:space-between;align-items:center;font-family:var(--font-m);font-size:11.5px;color:var(--muted);letter-spacing:.1em}
+.lab-top .live{color:#3DFF88}
+.phone-mock{width:230px;margin:18px auto 8px;background:#05070B;border:1px solid rgba(255,255,255,.16);border-radius:38px;padding:12px;box-shadow:0 40px 80px rgba(0,0,0,.5);position:relative}
+.screen{background:linear-gradient(180deg,#1B2740,#0A0F1C);border-radius:28px;padding:18px 14px;min-height:380px;position:relative;overflow:hidden}
+.screen::after{content:"";position:absolute;inset:0;background:radial-gradient(300px 200px at 50% 0%,rgba(200,255,46,.18),transparent 60%)}
+.crack{position:absolute;top:14px;right:16px;width:120px;height:150px;opacity:.55;background:
+ linear-gradient(100deg,transparent 46%,rgba(255,255,255,.55) 47%,transparent 49%),
+ linear-gradient(140deg,transparent 60%,rgba(255,255,255,.35) 61%,transparent 63%)}
+.diag{font-family:var(--font-m);font-size:11.5px;color:#CFF27A;line-height:1.9;position:relative;z-index:2}
+.diag .ok{color:#3DFF88}.diag .warn{color:#FFC24A}
+.chips-row{display:flex;gap:8px;margin:14px 2px 2px;flex-wrap:wrap;position:relative;z-index:3}
+.chip{font-family:var(--font-m);font-size:11.5px;background:rgba(10,14,20,.9);border:1px solid var(--line);border-radius:12px;padding:9px 12px}
+.chip b{color:var(--lime)}
+.lab-bottom{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.meter{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-family:var(--font-m);font-size:11.5px}
+.meter .bar{height:6px;background:rgba(255,255,255,.1);border-radius:99px;margin-top:8px;overflow:hidden}
+.meter .bar i{display:block;height:100%;background:var(--lime);border-radius:99px;animation:fill 3s ease-in-out infinite alternate}
+@keyframes fill{from{width:34%}to{width:92%}}
+/* marquee - single per page */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#0E131C;overflow:hidden;white-space:nowrap;margin:26px 0 0}
+.marquee-track{display:inline-flex;gap:34px;padding:13px 0;animation:scroll 26s linear infinite;font-family:var(--font-m);font-size:13px;color:#C6CDDB}
+.marquee-track b{color:var(--lime)}
+@keyframes scroll{to{transform:translateX(-50%)}}
+/* sections */
+section.block{padding:72px 0}
+.sec-head{max-width:760px;margin-bottom:30px}
+.sec-head h2{font-family:var(--font-d);font-size:clamp(26px,3.4vw,44px);line-height:1.02;margin:14px 0 12px}
+.sec-head p{color:#AEB6C6}
+/* bento faults */
+.bento{display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:auto auto;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
+.card:hover{transform:translateY(-4px);border-color:rgba(200,255,46,.4)}
+.card.big{grid-row:span 2;background:radial-gradient(500px 300px at 20% 0%,rgba(200,255,46,.14),transparent 60%),var(--surface)}
+.card.wide{grid-column:span 2;display:flex;gap:18px;align-items:center}
+.card h3{font-family:var(--font-d);font-size:17px;margin:12px 0 8px}
+.card ul{list-style:none;color:#B7BFCF;font-size:14px;display:grid;gap:6px}
+.card ul li::before{content:"— ";color:var(--lime)}
+.tag{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--lime);border:1px solid rgba(200,255,46,.3);padding:5px 10px;border-radius:99px;display:inline-block}
+.icon{width:40px;height:40px;border-radius:12px;background:rgba(200,255,46,.12);display:grid;place-items:center;font-size:19px}
+/* advantages - alternating, not cards-everywhere */
+.adv{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.adv-item{padding:30px;display:flex;gap:18px;background:var(--surface)}
+.adv-item:nth-child(2),.adv-item:nth-child(3){background:var(--surface2)}
+.adv-item+.adv-item{border-left:1px solid var(--line)}
+.adv-item:nth-child(3){border-left:none;border-top:1px solid var(--line)}
+.adv-item:nth-child(4){border-top:1px solid var(--line)}
+.adv-item h3{font-size:18px;margin-bottom:6px}
+.adv-item p{color:#A9B1C2;font-size:14.5px}
+/* price */
+.price-box{background:var(--paper);color:var(--ink);border-radius:26px;padding:30px}
+.price-box h2{font-family:var(--font-d);font-size:clamp(24px,3vw,38px);line-height:1.05}
+.price-tools{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap}
+.search{flex:1;min-width:220px;display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #0E1218;border-radius:999px;padding:12px 18px}
+.search input{border:none;outline:none;font:inherit;width:100%;background:transparent}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chipbtn{border:1.5px solid #0E1218;background:transparent;border-radius:999px;padding:10px 16px;font-weight:700;font-size:13.5px;cursor:pointer}
+.chipbtn.active{background:#0E1218;color:var(--lime)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;background:#fff;border-radius:16px;overflow:hidden}
+th{font-family:var(--font-m);font-size:11.5px;letter-spacing:.08em;text-align:left;padding:14px 16px;background:#0E1218;color:#fff}
+td{padding:13px 16px;border-bottom:1px solid #E6E7E0}
+td.num{font-family:var(--font-m);font-weight:700}
+tr:hover td{background:#F6FFD6}
+.note{font-size:13px;color:#4B5563;margin-top:12px}
+.quiz{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.quiz-card{background:#0E1218;color:#fff;border-radius:16px;padding:20px}
+.quiz-card h4{font-family:var(--font-d);font-size:15px;margin-bottom:12px}
+.quiz-card select,.quiz-card button{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:#1A2130;color:#fff;font:inherit;margin-top:8px}
+.quiz-card button{background:var(--lime);color:#111;font-weight:800;cursor:pointer;border:none}
+/* process */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.step{border:1px solid var(--line);border-radius:18px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.05),transparent)}
+.step .n{font-family:var(--font-d);font-size:40px;color:transparent;-webkit-text-stroke:1.2px var(--lime)}
+.step h3{margin:10px 0 6px;font-size:16px}
+.step p{color:var(--muted);font-size:14px}
+.step time{font-family:var(--font-m);font-size:11.5px;color:var(--lime)}
+/* contacts */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.c-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px}
+.c-card h3{font-family:var(--font-d);font-size:18px;margin-bottom:14px}
+.c-line{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line);font-size:15.5px}
+.c-line small{display:block;color:var(--muted);font-size:12.5px}
+.c-line a.tel{font-family:var(--font-m);font-weight:700;font-size:19px}
+form.calc{display:grid;gap:10px}
+form.calc input,form.calc select,form.calc textarea{background:#0D121B;border:1px solid var(--line);border-radius:12px;padding:13px;color:#fff;font:inherit}
+form.calc input:focus,form.calc select:focus{outline:2px solid var(--lime);border-color:var(--lime)}
+.hours{font-family:var(--font-m);font-size:12.5px;color:#C5CCDA;margin-top:12px}
+/* footer */
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:13.5px}
+.foot{display:flex;gap:18px;justify-content:space-between;flex-wrap:wrap}
+/* reveal */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+/* QoL: anchors offset under sticky header */
+section.block{scroll-margin-top:70px}
+/* burger + mobile menu */
+.burger{display:none;background:none;border:1px solid var(--line);border-radius:12px;color:#fff;font-size:18px;line-height:1;padding:9px 13px;cursor:pointer}
+.mmenu{display:none}
+.nav-links a.active{color:var(--lime)}
+/* hero quick search chips */
+.quick{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px;font-family:var(--font-m);font-size:12px;color:var(--muted)}
+.quick button{background:rgba(255,255,255,.05);border:1px solid var(--line);color:#E7EBF2;border-radius:999px;padding:8px 14px;font-family:var(--font-m);font-size:12.5px;cursor:pointer}
+.quick button:hover{border-color:var(--lime);color:var(--lime)}
+/* faq */
+.faq{display:grid;gap:10px;max-width:860px}
+.faq-item{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.faq-item>button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:14px;background:none;border:none;color:#fff;font-weight:700;font-size:15.5px;text-align:left;padding:18px 20px;cursor:pointer}
+.faq-item>button span.ic{color:var(--lime);font-size:20px;line-height:1;transition:transform .3s}
+.faq-item.open>button span.ic{transform:rotate(45deg)}
+.faq-item .ans{max-height:0;overflow:hidden;transition:max-height .35s ease;color:#AEB6C6;font-size:14.5px}
+.faq-item .ans p{padding:0 20px 18px;max-width:65ch}
+/* reviews */
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rev-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.rev-card .stars{color:var(--lime);letter-spacing:3px;font-size:14px}
+.rev-card h3{font-size:17px}
+.rev-card p{color:#A9B1C2;font-size:14px;flex:1}
+.rev-card a{color:var(--lime);font-weight:800;font-size:14px}
+/* route buttons */
+.route-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.route-btns a{border:1px solid var(--line);border-radius:999px;padding:10px 16px;font-size:13.5px;font-weight:700}
+.route-btns a:hover{border-color:var(--lime);color:var(--lime)}
+/* back to top */
+#toTop{position:fixed;right:18px;bottom:18px;z-index:60;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--lime);font-size:20px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s}
+#toTop.show{opacity:1;pointer-events:auto}
+/* a11y helpers */
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-60px;z-index:200;background:var(--lime);color:#111;font-weight:800;padding:10px 16px;border-radius:10px;transition:top .2s}
+.skip:focus{top:12px}
+.hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
+/* consent + privacy */
+.cons{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);cursor:pointer}
+.cons input{width:18px;height:18px;margin-top:1px;accent-color:var(--lime);flex:none}
+.priv{font-size:13px;color:var(--muted)}
+.priv summary{cursor:pointer;color:#C9CFDA}
+/* calculator */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px;align-items:stretch}
+.calc-grid select{background:#0D121B;border:1px solid var(--line);border-radius:14px;padding:15px;color:#fff;font:inherit}
+.calc-out{background:rgba(200,255,46,.06);border:1px solid rgba(200,255,46,.35);border-radius:14px;padding:15px 18px;font-size:15px}
+.calc-out b{color:var(--lime);font-family:var(--font-m);font-size:18px}
+.calc-out .go{display:inline-block;margin-top:8px;color:var(--lime);font-weight:800;font-size:13.5px;cursor:pointer}
+@media(max-width:1020px){.calc-grid{grid-template-columns:1fr}}
+/* sticky mobile call bar */
+.callbar{display:none}
+/* responsive */
+@media(max-width:1350px){
+ .nav{gap:16px}
+ .nav-links{gap:14px;font-size:13.5px;margin-left:8px}
+ .status-dot{display:none}
+ .phone-big{font-size:13.5px}
+}
+@media(max-width:1020px){
+ .hero-grid{grid-template-columns:1fr}
+ .bento{grid-template-columns:1fr 1fr}
+ .card.big{grid-row:auto;grid-column:span 2}
+ .steps{grid-template-columns:1fr 1fr}
+ .contact-grid,.quiz,.adv{grid-template-columns:1fr}
+ .adv-item+.adv-item{border-left:none;border-top:1px solid var(--line)}
+ .nav-links{display:none}
+}
+@media(max-width:640px){
+ .wrap,.nav{padding:0 16px}
+ .nav{gap:10px}
+ .status-dot,.phone-big{display:none}
+ .nav .btn{padding:11px 16px;font-size:13.5px}
+ .logo small{display:none}
+ .bento{grid-template-columns:1fr}
+ .card.big,.card.wide{grid-column:auto;grid-row:auto}
+ .card.wide{flex-direction:column;align-items:flex-start}
+ .steps{grid-template-columns:1fr}
+ .hero-stats{grid-template-columns:1fr 1fr}
+ .lab{min-height:auto}
+ .chips-row{margin-top:10px}
+ table{font-size:13px}
+ th:nth-child(4),td:nth-child(4){display:none}
+}
+@media(max-width:1020px){
+ .burger{display:block}
+ .nav-links{display:none}
+ .mmenu{display:none;position:fixed;top:68px;left:0;right:0;z-index:49;background:rgba(11,14,19,.98);border-bottom:1px solid var(--line);padding:8px 22px 16px}
+ .mmenu.open{display:grid}
+ .mmenu a{padding:12px 2px;border-top:1px solid var(--line);font-weight:700;font-size:15px}
+ .mmenu a.tel{color:var(--lime);font-family:var(--font-m)}
+ .rev-grid{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+ #trackForm{grid-template-columns:1fr!important}
+ .callbar{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:60;background:var(--lime);color:#111;border-radius:16px;padding:15px;justify-content:center;font-weight:800;font-size:15px}
+ footer{padding-bottom:96px}
+ #toTop{bottom:78px;right:14px}
+}
+@media print{
+ header,.lab,.hero-cta,.quick,.marquee,.quiz,.faq,.rev-grid,.adv,.steps,.contact-grid,.callbar,#toTop,.grain,.progress,#loader,.mmenu,.burger,.route-btns,footer{display:none!important}
+ body{background:#fff;color:#000}
+ .price-box{background:#fff;color:#000}
+ section.block{padding:10px 0}
+ table{font-size:11px}
+}
+@media (prefers-reduced-motion: reduce){
+ *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+ .reveal{opacity:1;transform:none}
+ #loader{display:none}
+}
+:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+<div id="loader"><div class="num" id="loadNum">0%</div><div class="bar"><i id="loadBar"></i></div><p>DIXON SERVICE • DIAGNOSTICS</p></div>
+
+<a class="skip" href="#fix">Перейти к содержимому</a>
+<header>
+<nav class="nav">
+<div class="logo"><div class="logo-mark">D</div><div>DIXON<small>AUTHORIZED SERVICE</small></div></div>
+<div class="nav-links"><a href="#fix">Неисправности</a><a href="#why">Преимущества</a><a href="#price">Цены</a><a href="#steps">Как мы работаем</a><a href="#faq">Вопросы</a><a href="#contacts">Контакты</a></div>
+<button class="burger" id="burger" aria-label="Меню" aria-expanded="false">☰</button>
+<div class="nav-right">
+<span class="status-dot"><i></i><span id="openState">Открыто • до 20:00</span></span>
+<a class="phone-big mono" href="tel:+78352364202">8 352 36-42-02</a>
+<a class="btn btn-lime" href="#contacts" data-magnet>Записаться</a>
+</div>
+</nav>
+<div class="mmenu" id="mmenu"><a href="#fix">Неисправности</a><a href="#why">Преимущества</a><a href="#price">Цены</a><a href="#steps">Как мы работаем</a><a href="#faq">Вопросы</a><a href="#contacts">Контакты</a><a class="tel" href="tel:+78352364202">Позвонить: 8 (8352) 36-42-02</a></div>
+</header>
+
+<div class="wrap hero">
+<div class="hero-grid">
+<div>
+<span class="eyebrow">ЧЕБОКСАРЫ • КАЛИНИНА, 91К1 • SAMSUNG</span>
+<h1>Чиним Samsung <span class="stroke">как на заводе.</span> <span class="lime">Отдаём за день.</span></h1>
+<p class="lead">Авторизованный сервисный центр <b>DIXON</b>. Экраны, аккумуляторы, корпуса и разъёмы — <b>оригинальные запчасти со склада</b>, сертифицированные инженеры и официальная гарантия. Бесплатная диагностика за 15 минут.</p>
+<div class="hero-cta">
+<a class="btn btn-lime" href="#price" data-magnet>Узнать цену ↓</a>
+<a class="btn btn-ghost" href="tel:+78352364202" data-magnet>Позвонить: 36-42-02</a>
+</div>
+<div class="quick"><span>Часто ищут:</span><button data-q="S24">S24</button><button data-q="A55">A55</button><button data-q="Z Fold">Z Fold</button><button data-q="Flip">Flip</button></div>
+<div class="queue"><span>● очередь сейчас:</span><strong id="queueNum">6 устройств</strong><span>• среднее ожидание</span><strong>~2 ч 10 мин</strong></div>
+<div class="hero-stats">
+<div class="stat"><b><em data-count="12">0</em> лет</b><span>чиним технику в Чебоксарах</span></div>
+<div class="stat"><b><em data-count="40">0</em> мин</b><span>замена АКБ и разъёма</span></div>
+<div class="stat"><b><em data-count="98">0</em>%</b><span>клиентов рекомендуют нас</span></div>
+</div>
+</div>
+
+<div class="lab reveal in">
+<div class="lab-top"><span>LAB-01 // ДИАГНОСТИКА</span><span class="live">● LIVE</span></div>
+<div class="phone-mock"><div class="screen"><div class="crack"></div><div class="diag" id="term">$ dixon --diagnose S24<br>> display … <span class="warn">FAIL</span><br>> battery … <span class="ok">89%</span><br>> moisture … <span class="ok">none</span><br>> board … <span class="ok">ok</span><br><span id="termLine">> ordering OLED…</span><span class="ok"> ▊</span></div></div></div>
+<div class="chips-row"><span class="chip">Дисплей S24 Ultra — <b>от 13 500 ₽</b></span><span class="chip">АКБ с работой — <b>от 4 200 ₽</b></span><span class="chip">Гарантия — <b>до 12 месяцев</b></span></div>
+<div class="lab-bottom">
+<div class="meter">Оригинал OLED<div class="bar"><i></i></div></div>
+<div class="meter">Склад: 240+ деталей<div class="bar"><i style="animation-delay:-1.5s"></i></div></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="marquee"><div class="marquee-track" id="marquee"></div></div>
+
+<section class="block wrap" id="fix">
+<div class="sec-head reveal"><h2>Что ломается — то и чиним. Без воды.</h2><p>Шесть направлений, по которым у нас всегда есть запчасти и оснастка. Выберите свою проблему — дальше подскажем цену.</p></div>
+<div class="bento">
+<div class="card big reveal"><span class="tag">ХИТ • 41% ОБРАЩЕНИЙ</span><div class="icon">📱</div><h3>Замена и ремонт экрана</h3><ul><li>разбилось стекло / трещины</li><li>не работает сенсор или часть экрана</li><li>нет подсветки</li><li>не гаснет при разговоре</li></ul><p style="margin-top:12px;color:var(--muted);font-size:13.5px" class="mono">OLED с рамой и без • калибровка • от 3 500 ₽</p></div>
+<div class="card reveal"><div class="icon">🔋</div><h3>Аккумулятор</h3><ul><li>быстро садится</li><li>греется / не заряжается</li><li>плохой контакт</li></ul></div>
+<div class="card reveal"><div class="icon">🏠</div><h3>Корпус</h3><ul><li>задняя крышка треснула</li><li>царапины / разбит полностью</li></ul></div>
+<div class="card reveal"><div class="icon">📶</div><h3>Общие проблемы</h3><ul><li>не работает Wi-Fi / SIM</li><li>попала влага</li><li>динамик, камера</li></ul></div>
+<div class="card reveal"><div class="icon">🔌</div><h3>Разъёмы</h3><ul><li>не заряжается</li><li>наушники / ПК не видит</li></ul></div>
+<div class="card wide reveal"><div class="icon">🎛️</div><div><h3>Кнопки: Home, громкость, включение</h3><p style="color:#B7BFCF;font-size:14px">Меняем шлейфы и толкатели, чистим контакты. Чаще всего — в день обращения, при вас.</p></div></div>
+</div>
+</section>
+
+<section class="block wrap" id="why">
+<div class="sec-head reveal"><h2>Почему Чебоксары несут Samsung именно нам</h2></div>
+<div class="adv reveal">
+<div class="adv-item"><div class="icon">⏱️</div><div><h3>Экономия времени и нервов</h3><p>Отлаженный процесс, логистика и склад деталей: ремонт любой сложности в кратчайший срок.</p></div></div>
+<div class="adv-item"><div class="icon">💰</div><div><h3>Справедливые цены</h3><p>Привлекательные цены на услуги и оригинальные запчасти. Скидки постоянным клиентам.</p></div></div>
+<div class="adv-item"><div class="icon">🛠️</div><div><h3>Профессиональные инженеры</h3><p>Сертификация у производителей, постоянное обучение, фирменное оборудование для ремонта.</p></div></div>
+<div class="adv-item"><div class="icon">🏅</div><div><h3>Официальная гарантия</h3><p>Только оригинальные запчасти и технология производителя. Гарантия на работы и комплектующие.</p></div></div>
+</div>
+</section>
+
+<section class="block wrap" id="price">
+<div class="price-box reveal">
+<span class="eyebrow" style="color:#0E1218;border-color:#0E1218;background:transparent">ПРАЙС • SAMSUNG GALAXY</span>
+<h2>Честные цены с работой. Найдите свою модель.</h2>
+<p style="color:#4B5563;max-width:70ch">Стоимость указана на чёрный цвет, на другие цвета может отличаться. Точную цену и наличие уточняйте по телефону <b>8 (8352) 36-42-02</b>.</p>
+<div class="price-tools">
+<label class="search"><span aria-hidden="true">🔍</span> <input id="q" placeholder="Например: S24, A55, Z Fold…" aria-label="Поиск модели"></label>
+<div class="chips"><button class="chipbtn active" data-f="all">Все</button><button class="chipbtn" data-f="A">Galaxy A / M</button><button class="chipbtn" data-f="S">Galaxy S</button><button class="chipbtn" data-f="Z">Fold / Flip</button></div>
+</div>
+<div style="overflow:auto">
+<table id="ptable"><thead><tr><th>Модель</th><th>Дисплей с работой</th><th>АКБ с работой</th><th>Задняя крышка</th></tr></thead><tbody>
+<tr data-g="A"><td>A15 SM-A155F</td><td class="num">5 500 ₽</td><td class="num">4 200 ₽</td><td class="num">2 100 ₽</td></tr>
+<tr data-g="A"><td>A25 SM-A256E</td><td class="num">6 800 ₽</td><td class="num">4 400 ₽</td><td class="num">2 200 ₽</td></tr>
+<tr data-g="A"><td>A35 SM-A356E</td><td class="num">8 200 ₽</td><td class="num">4 600 ₽</td><td class="num">2 600 ₽</td></tr>
+<tr data-g="A"><td>A55 SM-A556E (без рамы)</td><td class="num">8 900 ₽</td><td class="num">5 200 ₽</td><td class="num">3 200 ₽</td></tr>
+<tr data-g="A"><td>A55 SM-A556E (с рамой)</td><td class="num">12 300 ₽</td><td class="num">5 200 ₽</td><td class="num">3 200 ₽</td></tr>
+<tr data-g="S"><td>S23 SM-S911B (с рамой)</td><td class="num">16 500 ₽</td><td class="num">6 300 ₽</td><td class="num">4 600 ₽</td></tr>
+<tr data-g="S"><td>S23 Ultra (без рамы)</td><td class="num">21 500 ₽</td><td class="num">6 500 ₽</td><td class="num">6 400 ₽</td></tr>
+<tr data-g="S"><td>S24 SM-S921B (без рамы)</td><td class="num">13 500 ₽</td><td class="num">6 400 ₽</td><td class="num">4 900 ₽</td></tr>
+<tr data-g="S"><td>S24 Ultra (без рамы)</td><td class="num">21 500 ₽</td><td class="num">6 200 ₽</td><td class="num">5 400 ₽</td></tr>
+<tr data-g="S"><td>S25 Ultra Black (без рамы)</td><td class="num">20 500 ₽</td><td class="num">7 400 ₽</td><td class="num">7 500 ₽</td></tr>
+<tr data-g="Z"><td>Z Flip 5 SM-F731B</td><td class="num">30 200 ₽</td><td class="num">10 500 ₽ *</td><td class="num">4 600 ₽</td></tr>
+<tr data-g="Z"><td>Z Fold 5 SM-F946B</td><td class="num">53 500 ₽</td><td class="num">10 500 ₽ *</td><td class="num">6 000 ₽</td></tr>
+<tr data-g="Z"><td>Z Fold 6 SM-F956B</td><td class="num">55 000 ₽</td><td class="num">10 500 ₽ *</td><td class="num">6 200 ₽</td></tr>
+</tbody></table>
+</div>
+<p class="note">* для Fold / Flip — замена двух АКБ. Полный прайс на 130+ моделей — у администратора. Это лишь популярные позиции с dixon-sc.ru.</p>
+<div class="quiz">
+<div class="quiz-card"><h4>⚡ Экспресс-оценка: что случилось?</h4><select id="sym" aria-label="Что случилось"><option value="screen">Разбит экран / не работает сенсор</option><option value="bat">Быстро садится / не заряжается</option><option value="back">Треснула задняя крышка</option><option value="water">Попала влага / не видит SIM</option></select><button id="symBtn">Показать ориентир →</button><p id="symOut" class="mono" style="margin-top:10px;color:var(--lime);font-size:13px"></p></div>
+<div class="quiz-card" style="background:#fff;color:#111"><h4 style="color:#111">📞 Не нашли модель? Пришлите фото поломки</h4><p style="font-size:14px;color:#4B5563">Ответим за 10 минут в рабочее время и назовём точную цену с работой.</p><a class="btn btn-lime" style="margin-top:12px" href="tel:+78352364202">Позвонить сейчас</a></div>
+</div>
+</div>
+</section>
+
+<section class="block wrap" id="calc">
+<div class="sec-head reveal"><h2>Калькулятор: сколько стоит мой ремонт</h2><p>Цены подтягиваются с сервера — те же, что в прайсе выше, всегда актуальные.</p></div>
+<div class="calc-grid reveal">
+<select id="calcModel" aria-label="Модель телефона"><option value="">Модель…</option></select>
+<select id="calcJob" aria-label="Что чиним"><option value="display">Дисплей с работой</option><option value="battery">Аккумулятор с работой</option><option value="back">Задняя крышка с работой</option></select>
+<div class="calc-out" id="calcOut">Выберите модель — покажем цену с работой.</div>
+</div>
+</section>
+
+<section class="block wrap" id="steps">
+<div class="sec-head reveal"><h2>От трещины до «как новый» — 4 шага</h2></div>
+<div class="steps">
+<div class="step reveal"><div class="n">01</div><h3>Диагностика 15 минут</h3><p>Проверяем плату, влагу и шлейфы. Бесплатно, даже если откажетесь.</p><time>~ 00:15</time></div>
+<div class="step reveal"><div class="n">02</div><h3>Цена фиксируется</h3><p>Называем стоимость с работой и запчастью. Никаких «вскрыли — доплатите».</p><time>сразу</time></div>
+<div class="step reveal"><div class="n">03</div><h3>Ремонт при вас</h3><p>АКБ и разъёмы — от 40 минут. Экраны — 2–4 часа. Сложное — до 2 дней.</p><time>40 мин – 1 день</time></div>
+<div class="step reveal"><div class="n">04</div><h3>Гарантия и чек</h3><p>Оригинальные детали, пломба, гарантийный талон до 12 месяцев.</p><time>до 12 мес.</time></div>
+</div>
+</section>
+
+<section class="block wrap" id="faq">
+<div class="sec-head reveal"><h2>Частые вопросы — отвечаем как есть</h2><p>Собрали то, о чём спрашивают по телефону чаще всего. Не нашли свой случай — звоните: 36-42-02.</p></div>
+<div class="faq">
+<div class="faq-item reveal"><button>Диагностика правда бесплатная?<span class="ic">+</span></button><div class="ans"><p>Да. Проверяем устройство за ~15 минут и называем точную цену. Бесплатно — даже если решите не чинить.</p></div></div>
+<div class="faq-item reveal"><button>Сколько ждать ремонт?<span class="ic">+</span></button><div class="ans"><p>Аккумулятор и разъёмы — от 40 минут, экраны — 2–4 часа, сложная пайка и «утопленники» — до 2 дней. Срок называем до начала работ.</p></div></div>
+<div class="faq-item reveal"><button>Запчасти оригинальные?<span class="ic">+</span></button><div class="ans"><p>Да, только оригинальные, со склада в Чебоксарах. На работы и комплектующие даём официальную гарантию до 12 месяцев.</p></div></div>
+<div class="faq-item reveal"><button>Цена в прайсе окончательная?<span class="ic">+</span></button><div class="ans"><p>Цену фиксируем после диагностики — никаких «вскрыли, доплатите». Учтите: прайс указан на чёрный цвет, на другие цвета стоимость может отличаться.</p></div></div>
+<div class="faq-item reveal"><button>Нужно ли записываться заранее?<span class="ic">+</span></button><div class="ans"><p>Нет, принимаем в порядке живой очереди ежедневно с 9:00 до 20:00. Но заявка с сайта ускорит приём — перезвоним за 10 минут.</p></div></div>
+<div class="faq-item reveal"><button>Что будет с моими данными?<span class="ic">+</span></button><div class="ans"><p>Ничего не трогаем и не копируем. Но перед ремонтом рекомендуем сделать резервную копию — на всякий случай.</p></div></div>
+</div>
+</section>
+
+<section class="block wrap" id="reviews">
+<div class="sec-head reveal"><h2>Нас советуют соседям</h2><p>Мы не выдумываем отзывы — почитайте живые на картах. Были у нас? Расскажите, это помогает другим решиться.</p></div>
+<div class="rev-grid">
+<div class="rev-card reveal"><div class="stars">★★★★★</div><h3>Яндекс Карты</h3><p>Оценки и отзывы посетителей сервисного центра на Калинина, 91к1.</p><a data-map="Чебоксары, улица Калинина, 91к1" href="#">Читать отзывы →</a></div>
+<div class="rev-card reveal"><div class="stars">★★★★★</div><h3>2ГИС</h3><p>Рейтинг организации, фото и отзывы чебоксарцев.</p><a data-gis="Чебоксары, Калинина 91к1" href="#">Открыть в 2ГИС →</a></div>
+<div class="rev-card reveal"><div class="stars">★★★★★</div><h3>Постоянным клиентам — скидки</h3><p>Чинили у нас раньше? Назовите номер прошлого заказа — сделаем скидку на следующий ремонт.</p><a href="tel:+78352364202">Уточнить по телефону →</a></div>
+</div>
+</section>
+
+<section class="block wrap" id="contacts">
+<div class="sec-head reveal"><span class="eyebrow">КОНТАКТЫ • ЖИВАЯ ОЧЕРЕДЬ</span><h2>Приезжайте — посмотрим при вас</h2></div>
+<div class="contact-grid">
+<div class="c-card reveal" style="grid-column:1/-1"><h3>Проверить статус заявки</h3><form class="calc" id="trackForm" style="grid-template-columns:1fr 1fr auto;align-items:end"><input id="trackId" placeholder="Номер заявки" inputmode="numeric" aria-label="Номер заявки"><input id="trackPhone" placeholder="Телефон из заявки" inputmode="tel" aria-label="Телефон из заявки"><button class="btn btn-ghost" type="submit">Статус →</button></form><p class="mono" id="trackOut" style="font-size:13px;color:var(--lime);margin-top:10px"></p></div>
+<div class="c-card reveal"><h3>DIXON • Чебоксары</h3>
+<div class="c-line">📍<div>ул. Калинина, 91к1<small>вход с торца, вывеска DIXON • парковка во дворе</small></div></div>
+<div class="c-line">📞<div><a class="tel" href="tel:+78352364202">8 (8352) 36-42-02</a><small>ежедневно 9:00–20:00 • <span id="msk">--:--</span> МСК</small></div></div>
+<div class="c-line">✉️<div><a href="mailto:manager@dixon-sc.ru">manager@dixon-sc.ru</a><small>фото поломки — сразу оценим</small></div></div>
+<div class="route-btns"><a data-map="Чебоксары, улица Калинина, 91к1" href="#">Яндекс Карты →</a><a data-gis="Чебоксары, Калинина 91к1" href="#">Маршрут в 2ГИС →</a></div>
+<div class="hours" id="hoursLine">● сегодня принимаем до 19:30</div>
+</div>
+<div class="c-card reveal"><h3>Оставить заявку — перезвоним за 10 минут</h3>
+<form class="calc" id="leadForm"><input required placeholder="Ваше имя" name="n" id="leadName" aria-label="Ваше имя" autocomplete="name"><input required placeholder="Телефон" name="p" id="leadPhone" aria-label="Телефон" inputmode="tel" autocomplete="tel"><input name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"><select name="t" id="leadTopic" aria-label="Тема обращения"><option>Разбит экран</option><option>Аккумулятор</option><option>Корпус / крышка</option><option>Не заряжается / разъём</option><option>Другое</option></select><label class="cons"><input type="checkbox" id="leadConsent" checked><span>Согласен на обработку персональных данных</span></label><details class="priv"><summary>Как мы храним данные</summary><p>Имя и телефон хранятся только на компьютере сервиса в Чебоксарах и нужны исключительно для обратного звонка. Никому не передаём, удалим по первой просьбе — позвоните 36-42-02.</p></details><button class="btn btn-lime" type="submit">Жду звонка →</button><p class="mono" id="formOk" style="font-size:12.5px;color:var(--lime)"></p></form>
+</div>
+</div>
+</section>
+
+<a class="callbar" href="tel:+78352364202">Позвонить: 8 (8352) 36-42-02</a>
+<button id="toTop" aria-label="Наверх">↑</button>
+<footer><div class="wrap foot"><span>Сервисный центр DIXON © 2022–2026 • Чебоксары, Калинина 91к1</span><span class="mono">Цены с dixon-sc.ru • редизайн-концепт</span><a href="https://www.tclmobile.ru/">Официальный сайт TCL →</a><a href="/admin.html">Сотрудникам</a></div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+// loader
+let p=0;const nEl=document.getElementById('loadNum'),bEl=document.getElementById('loadBar');
+const li=setInterval(()=>{p=Math.min(100,p+Math.random()*16);nEl.textContent=Math.floor(p)+'%';bEl.style.width=p+'%';if(p>=100){clearInterval(li);setTimeout(()=>document.getElementById('loader').classList.add('done'),250)}},120);
+// progress
+addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progress').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'},{passive:true});
+// marquee
+const items=['РЕМОНТ SAMSUNG <b>ОТ 40 МИНУТ</b>','ОРИГИНАЛЬНЫЕ OLED <b>В НАЛИЧИИ</b>','ДИАГНОСТИКА <b>БЕСПЛАТНО</b>','ГАРАНТИЯ <b>ДО 12 МЕСЯЦЕВ</b>','КАЛИНИНА 91К1 • <b>36-42-02</b>'];
+document.getElementById('marquee').innerHTML=(items.concat(items).map(s=>'<span>'+s+'</span><span>✦</span>').join(''));
+// reveal
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// counters
+const cio=new IntersectionObserver(e=>e.forEach(x=>{if(!x.isIntersecting)return;const el=x.target,end=+el.dataset.count;let s=0;const t=setInterval(()=>{s+=Math.max(1,Math.round(end/40));if(s>=end){s=end;clearInterval(t)}el.textContent=s},40);cio.unobserve(el)}),{threshold:.6});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+// search + filter
+const q=document.getElementById('q'),rows=[...document.querySelectorAll('#ptable tbody tr')];let f='all';
+function apply(){const v=q.value.toLowerCase();rows.forEach(r=>{const okG=(f==='all'||r.dataset.g===f);const okQ=r.textContent.toLowerCase().includes(v);r.style.display=(okG&&okQ)?'':'none'})}
+q.addEventListener('input',apply);
+document.querySelectorAll('.chipbtn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.chipbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');f=b.dataset.f;apply()});
+// quiz
+const out=document.getElementById('symOut');
+document.getElementById('symBtn').onclick=()=>{const v=document.getElementById('sym').value;const m={screen:'Экран: от 3 500 ₽ (A) / 13–21 тыс. ₽ (S) — точно по модели выше.',bat:'АКБ с работой: 4 200–7 400 ₽, Fold/Flip — 10 500 ₽ за пару.',back:'Крышка с работой: 2 000–7 500 ₽. Цвет уточняйте.',water:'Влага/SIM/Wi-Fi: от 1 500 ₽ после бесплатной диагностики.'};out.textContent='→ '+m[v]};
+// queue + clock
+let qq=6;setInterval(()=>{qq=Math.max(2,Math.min(11,qq+(Math.random()>.5?1:-1)));document.getElementById('queueNum').textContent=qq+' устройств'},5000);
+async function syncStatus(){try{const r=await fetch('/api/status');if(!r.ok)return;const s=await r.json();if(typeof s.queue==='number'){qq=s.queue;document.getElementById('queueNum').textContent=qq+' устройств'}}catch(e){}}
+setInterval(syncStatus,20000);syncStatus();
+if(location.protocol==='file:'){document.getElementById('formOk').textContent='Форма заработает после запуска сервера: откройте start.bat в папке сайта.';}
+function tick(){try{document.getElementById('msk').textContent=new Date().toLocaleTimeString('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit'})}catch(e){}const h=new Date().getHours();document.getElementById('openState').textContent=(h>=9&&h<20)?'Открыто • до 20:00':'Закрыто • с 9:00'}setInterval(tick,30000);tick();
+// term typing
+const lines=['> calibrating touch… ok','> sealing + pressure test… ok','> ready for pickup ✓'];let li2=0;setInterval(()=>{document.getElementById('termLine').textContent=lines[li2++%lines.length]},2600);
+// magnetic
+if(matchMedia('(pointer:fine)').matches){document.querySelectorAll('[data-magnet]').forEach(b=>{b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.12}px,${(e.clientY-r.top-r.height/2)*.18}px)`});b.addEventListener('mouseleave',()=>b.style.transform='')})}
+// form
+document.getElementById('leadForm').addEventListener('submit',async e=>{e.preventDefault();const ok=document.getElementById('formOk');const fd=new FormData(e.target);const checked=document.getElementById('leadConsent').checked;if(!checked){ok.textContent='⚠ Поставьте согласие на обработку данных.';return}const body={name:String(fd.get('n')||'').trim(),phone:String(fd.get('p')||'').trim(),topic:fd.get('t'),company:String(fd.get('company')||''),consent:true};ok.textContent='Отправляем…';try{const r=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!j.ok)throw new Error(j.error||'error');if(j.id===0){ok.textContent='✓ Заявка принята. Перезвоним в течение 10 минут в рабочее время.'}else{ok.textContent='✓ Заявка №'+j.id+' принята. Перезвоним в течение 10 минут в рабочее время.'}e.target.reset()}catch(err){const m=String((err&&err.message)||'');ok.textContent=(m&&!/Failed to fetch|NetworkError|Load failed/i.test(m))?('⚠ '+m):'Не получилось отправить. Позвоните нам: 8 (8352) 36-42-02.'}});
+// lead tracker
+const tf=document.getElementById('trackForm');
+if(tf)tf.addEventListener('submit',async e=>{e.preventDefault();const o=document.getElementById('trackOut');o.textContent='Проверяем…';try{const r=await fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:document.getElementById('trackId').value,phone:document.getElementById('trackPhone').value})});const j=await r.json();if(!j.ok)throw new Error(j.error||'error');o.textContent='✓ Заявка №'+j.id+(j.done?' выполнена — можно забирать!':' принята и уже в работе.')}catch(err){const m=String((err&&err.message)||'');o.textContent=(m&&!/Failed to fetch|NetworkError|Load failed/i.test(m))?('⚠ '+m):'Нужен запущенный сервер: откройте start.bat в папке сайта.'}});
+// price calculator (data from backend)
+(async function(){const m=document.getElementById('calcModel'),j=document.getElementById('calcJob'),o=document.getElementById('calcOut');if(!m||!j||!o)return;let list=[];try{const r=await fetch('/api/prices');const d=await r.json();list=d.prices||[]}catch(e){o.textContent='Калькулятор требует запущенный сервер (start.bat). Цены — в таблице выше.';return}
+const fmt=n=>Number(n).toLocaleString('ru-RU')+' ₽';
+list.forEach((p,i)=>{const op=document.createElement('option');op.value=i;op.textContent=p.model;m.appendChild(op)});
+const topics={display:'Разбит экран',battery:'Аккумулятор',back:'Корпус / крышка'};
+function upd(){if(m.value===''){o.textContent='Выберите модель — покажем цену с работой.';return}const p=list[+m.value],k=j.value;let t=''+p.model+' — '+j.options[j.selectedIndex].text+': <b>'+fmt(p[k])+'</b>';if(p.note)t+='<br><span style="font-size:12.5px;color:var(--muted)">Fold/Flip: пара АКБ меняется сразу.</span>';t+='<br><span class="go" id="calcGo">Оставить заявку на этот ремонт →</span>';o.innerHTML=t;document.getElementById('calcGo').onclick=()=>{const s=document.getElementById('leadTopic');if(s)s.value=topics[k];document.querySelector('#contacts').scrollIntoView({behavior:'smooth'})}}
+m.onchange=upd;j.onchange=upd;})();
+// burger menu
+const bg=document.getElementById('burger'),mm=document.getElementById('mmenu');
+if(bg&&mm){bg.onclick=()=>{const o=mm.classList.toggle('open');bg.textContent=o?'✕':'☰';bg.setAttribute('aria-expanded',o)};mm.querySelectorAll('a').forEach(a=>a.onclick=()=>{mm.classList.remove('open');bg.textContent='☰';bg.setAttribute('aria-expanded','false')})}
+// scrollspy
+const spy=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+x.target.id))}}),{rootMargin:'-40% 0px -55% 0px'});
+['fix','why','price','steps','faq','contacts'].forEach(id=>{const s=document.getElementById(id);if(s)spy.observe(s)});
+// hero quick chips -> price search
+document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const q=document.getElementById('q');q.value=b.dataset.q;q.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('#price').scrollIntoView({behavior:'smooth'})});
+// map links built at runtime
+document.querySelectorAll('[data-map]').forEach(a=>{a.href='https://yandex.ru/maps/?text='+encodeURIComponent(a.dataset.map);a.target='_blank';a.rel='noopener'});
+document.querySelectorAll('[data-gis]').forEach(a=>{a.href='https://2gis.ru/search/'+encodeURIComponent(a.dataset.gis);a.target='_blank';a.rel='noopener'});
+// faq accordion
+document.querySelectorAll('.faq-item>button').forEach(b=>b.setAttribute('aria-expanded','false'));
+document.querySelectorAll('.faq-item>button').forEach(b=>b.onclick=()=>{const it=b.parentElement,ans=it.querySelector('.ans'),was=it.classList.contains('open');document.querySelectorAll('.faq-item.open').forEach(o=>{o.classList.remove('open');o.querySelector('.ans').style.maxHeight=null});document.querySelectorAll('.faq-item>button').forEach(x=>x.setAttribute('aria-expanded','false'));if(!was){it.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px';b.setAttribute('aria-expanded','true')}});
+// phone mask +7 (___) ___-__-__
+document.querySelectorAll('input[name=p],#trackPhone').forEach(ph=>{ph.addEventListener('input',()=>{let d=ph.value.replace(/\D/g,'');if(d.startsWith('8'))d='7'+d.slice(1);if(d&&!d.startsWith('7'))d='7'+d;d=d.slice(0,11);let r='+7';if(d.length>1)r+=' ('+d.slice(1,4);if(d.length>=4)r+=')';if(d.length>4)r+=' '+d.slice(4,7);if(d.length>7)r+='-'+d.slice(7,9);if(d.length>9)r+='-'+d.slice(9,11);ph.value=d.length<=1?'+7':r})});
+// back to top
+const tt=document.getElementById('toTop');
+if(tt){addEventListener('scroll',()=>tt.classList.toggle('show',scrollY>900),{passive:true});tt.onclick=()=>scrollTo({top:0,behavior:'smooth'})}
+// GSAP animations if available + motion allowed
+setTimeout(()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>el.classList.add('in')),2500);
+try{if(window.gsap&&!matchMedia('(prefers-reduced-motion: reduce)').matches){gsap.registerPlugin(ScrollTrigger);gsap.from('h1',{y:40,opacity:0,duration:1,ease:'power3.out',delay:.9})}}catch(e){}
+</script>
+</body>
+</html>
