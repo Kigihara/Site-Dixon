@@ -159,10 +159,15 @@ td.num{font-family:var(--font-m);font-weight:700}
 tr:hover td{background:#E9F1FF}
 .note{font-size:13px;color:#4B5563;margin-top:12px}
 .quiz{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.quiz-card{background:#0E1218;color:#fff;border-radius:16px;padding:20px}
-.quiz-card h4{font-family:var(--font-d);font-size:15px;margin-bottom:12px}
-.quiz-card select,.quiz-card button{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.2);background:#1A2130;color:#fff;font:inherit;margin-top:8px}
-.quiz-card button{background:var(--lime);color:#111;font-weight:800;cursor:pointer;border:none}
+/* v1.22 quiz in price-box language: light form card + dark CTA card */
+.quiz-card{background:#fff;color:#111;border:1.5px solid #0E1218;border-radius:20px;padding:24px;transition:transform .3s,box-shadow .3s}
+.quiz-card:hover{transform:translateY(-3px);box-shadow:0 18px 44px rgba(14,18,24,.14)}
+.quiz-card h4{font-family:var(--font-d);font-size:15px;margin-bottom:12px;color:#111}
+.quiz-card select{width:100%;padding:13px 14px;border-radius:12px;border:1.5px solid #0E1218;background:#fff;color:#111;font:inherit;margin-top:8px;cursor:pointer}
+.quiz-card select:focus{outline:2px solid var(--lime);outline-offset:1px}
+.quiz-card button{width:100%;padding:13px;border-radius:12px;background:#0E1218;color:var(--lime);font-weight:800;font-size:14px;cursor:pointer;border:none;margin-top:10px;transition:transform .2s}
+.quiz-card button:hover{transform:translateY(-1px)}
+.quiz-card button:active{transform:scale(.98)}
 /* process */
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .step{border:1px solid var(--line);border-radius:18px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.05),transparent)}
@@ -281,9 +286,13 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 .priv summary{cursor:pointer;color:#C9CFDA}
 /* calculator */
 .calc-grid{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px;align-items:stretch}
-.calc-grid select{background:#0D121B;border:1px solid var(--line);border-radius:14px;padding:15px;color:#fff;font:inherit}
-.calc-out{background:rgba(91,147,255,.06);border:1px solid rgba(91,147,255,.35);border-radius:14px;padding:15px 18px;font-size:15px}
-.calc-out b{color:var(--lime);font-family:var(--font-m);font-size:18px}
+/* v1.22 labeled calc fields + accent output */
+.calc-f{display:grid;gap:8px;align-content:start}
+.calc-f>span{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;color:var(--muted)}
+.calc-f select{background:#0D121B;border:1px solid var(--line);border-radius:14px;padding:15px;color:#fff;font:inherit;width:100%;cursor:pointer}
+.calc-f select:focus{outline:2px solid var(--lime);border-color:var(--lime)}
+.calc-out{background:rgba(91,147,255,.06);border:1px solid rgba(91,147,255,.35);border-left:4px solid var(--lime);border-radius:14px;padding:15px 18px;font-size:15px}
+.calc-out b{color:var(--lime);font-family:var(--font-m);font-size:22px}
 .calc-out .go{display:inline-block;margin-top:8px;color:var(--lime);font-weight:800;font-size:13.5px;cursor:pointer}
 /* CSP-safe replacements for former inline styles */
 .d2{animation-delay:-1.5s}
@@ -309,10 +318,10 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 #ptable tbody.fresh tr:nth-child(5){animation-delay:.12s}
 #ptable tbody.fresh tr:nth-child(6){animation-delay:.15s}
 @media(max-width:640px){.tscroll{max-height:420px}}
-#symOut{margin-top:10px;color:var(--lime);font-size:13px}
-.quiz-alt{background:#fff;color:#111}
-.quiz-alt h4{color:#111}
-.quiz-alt p{font-size:14px;color:#4B5563}
+#symOut{margin-top:10px;color:#0E1218;font-size:13.5px;font-weight:700}
+.quiz-alt{background:#0E1218;color:#fff;border:1.5px solid #0E1218}
+.quiz-alt h4{color:#fff}
+.quiz-alt p{font-size:14px;color:#A9B1C2}
 .quiz-alt a{margin-top:12px}
 #formOk{font-size:12.5px;color:var(--lime)}
 .mini{font-size:12.5px;color:var(--muted)}
@@ -520,8 +529,8 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <section class="block wrap" id="calc">
 <div class="sec-head reveal"><h2>Калькулятор: сколько стоит мой ремонт</h2><p>Цены подтягиваются с сервера — те же, что в прайсе выше, всегда актуальные.</p></div>
 <div class="calc-grid reveal">
-<select id="calcModel" aria-label="Модель телефона"><option value="">Модель…</option></select>
-<select id="calcJob" aria-label="Что чиним"><option value="display">Дисплей с работой</option><option value="battery">Аккумулятор с работой</option><option value="back">Задняя крышка с работой</option></select>
+<label class="calc-f"><span>МОДЕЛЬ</span><select id="calcModel" aria-label="Модель телефона"><option value="">Модель…</option></select></label>
+<label class="calc-f"><span>РАБОТА</span><select id="calcJob" aria-label="Что чиним"><option value="display">Дисплей с работой</option><option value="battery">Аккумулятор с работой</option><option value="back">Задняя крышка с работой</option></select></label>
 <div class="calc-out" id="calcOut">Выберите модель — покажем цену с работой.</div>
 </div>
 </section>
