@@ -240,7 +240,14 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 .hero::before{animation:mesh 18s ease-in-out infinite alternate-reverse}
 @keyframes mesh{from{transform:translate3d(-2%,0,0) scale(1)}to{transform:translate3d(2%,-3%,0) scale(1.06)}}
 @media print{.hero::after{display:none!important}}
-/* faq */
+/* v1.20 faq split: questions + sticky call card */
+.faq-wrap{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
+.faq-wrap .faq{max-width:none}
+.faq-side{position:sticky;top:90px;background:linear-gradient(180deg,#141B29,#0D1119);border:1px solid var(--line);border-radius:18px;padding:26px;display:grid;gap:12px;align-content:start}
+.faq-side h3{font-family:var(--font-d);font-size:19px;line-height:1.2}
+.faq-side p{color:#A9B1C2;font-size:14.5px}
+.faq-side .mono{font-size:12px;color:var(--muted)}
+@media(max-width:1150px){.faq-wrap{grid-template-columns:1fr}.faq-side{position:static}}
 .faq{display:grid;gap:10px;max-width:860px}
 .faq-item{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
 .faq-item>button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:14px;background:none;border:none;color:#fff;font-weight:700;font-size:15.5px;text-align:left;padding:18px 20px;cursor:pointer}
@@ -531,6 +538,7 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 
 <section class="block wrap" id="faq">
 <div class="sec-head reveal"><h2>Частые вопросы — отвечаем как есть</h2><p>Собрали то, о чём спрашивают по телефону чаще всего. Не нашли свой случай — звоните: 36-42-02.</p></div>
+<div class="faq-wrap">
 <div class="faq">
 <div class="faq-item reveal"><button>Диагностика правда бесплатная?<span class="ic">+</span></button><div class="ans"><p>Да. Проверяем устройство за ~15 минут и называем точную цену. Бесплатно — даже если решите не чинить.</p></div></div>
 <div class="faq-item reveal"><button>Сколько ждать ремонт?<span class="ic">+</span></button><div class="ans"><p>Аккумулятор и разъёмы — от 40 минут, экраны — 2–4 часа, сложная пайка и «утопленники» — до 2 дней. Срок называем до начала работ.</p></div></div>
@@ -538,6 +546,8 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <div class="faq-item reveal"><button>Цена в прайсе окончательная?<span class="ic">+</span></button><div class="ans"><p>Цену фиксируем после диагностики — никаких «вскрыли, доплатите». Учтите: прайс указан на чёрный цвет, на другие цвета стоимость может отличаться.</p></div></div>
 <div class="faq-item reveal"><button>Нужно ли записываться заранее?<span class="ic">+</span></button><div class="ans"><p>Нет, принимаем в порядке живой очереди ежедневно с 9:00 до 20:00. Но заявка с сайта ускорит приём — перезвоним за 10 минут.</p></div></div>
 <div class="faq-item reveal"><button>Что будет с моими данными?<span class="ic">+</span></button><div class="ans"><p>Ничего не трогаем и не копируем. Но перед ремонтом рекомендуем сделать резервную копию — на всякий случай.</p></div></div>
+</div>
+<aside class="faq-side reveal"><h3>Не нашли свой случай?</h3><p>Позвоните — ответим за минуту и назовём точную цену с работой.</p><a class="btn btn-lime" href="tel:+78352364202" data-magnet>36-42-02</a><span class="mono">ежедневно 9:00–20:00</span></aside>
 </div>
 </section>
 
