@@ -3,7 +3,7 @@
 Сайт + бэкенд сервисного центра Samsung (Чебоксары, Калинина 91к1).
 Локально: `start.bat` → http://127.0.0.1:8099/ · Админка: `/admin.html` (токен `ADMIN_TOKEN`).
 Публично: https://kigihara.github.io/Site-Dixon/ (статика, GitHub Pages, бесплатно).
-Репозиторий: https://github.com/Kigihara/Site-Dixon · Текущая версия: **v1.12**.
+Репозиторий: https://github.com/Kigihara/Site-Dixon · Текущая версия: **v1.13**.
 
 ## 1. Куда идём
 
@@ -104,3 +104,4 @@
 - **v1.10** — шапка: статус только с 1700px, запрет переносов в навигации.
 - **v1.11** — визуал C (гибрид): SVG-иконки везде вместо эмодзи, aurora hero, glass lab с tilt, premium hover bento, stagger reveals, опциональные CDN-шрифты с локальным фолбэком, CSP allowlist fonts.googleapis/gstatic.
 - **v1.12** — плавный возврат lab-tilt: ease-out lerp через rAF 450мс вместо резкого сброса, класс tilt не снимается, `will-change` только в наклоне.
+- **v1.13** — прайс glow-up: липкая шапка в скролл-боксе, клик по строке → калькулятор, подсветка совпадений, счётчик, empty-state; починка поиска после подгрузки цен с бэкенда.

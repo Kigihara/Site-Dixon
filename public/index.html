@@ -262,7 +262,25 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 .fine{margin-top:12px;color:var(--muted);font-size:13.5px}
 .eyebrow-dark{color:#0E1218;border-color:#0E1218;background:transparent}
 .psub{color:#4B5563;max-width:70ch}
-.tscroll{overflow:auto}
+.tscroll{overflow:auto;max-height:520px;border-radius:16px;scrollbar-width:thin;scrollbar-color:#0E1218 #fff}
+.tscroll::-webkit-scrollbar{width:10px;height:10px}
+.tscroll::-webkit-scrollbar-track{background:#fff}
+.tscroll::-webkit-scrollbar-thumb{background:#0E1218;border-radius:99px;border:2px solid #fff}
+#ptable thead th{position:sticky;top:0;z-index:2;box-shadow:0 1px 0 rgba(0,0,0,.25)}
+#ptable tbody tr{cursor:pointer}
+#ptable tbody tr:hover td{background:#DCE9FF}
+#ptable tbody tr:active td{background:#C9DEFF}
+#ptable mark{background:rgba(91,147,255,.4);border-radius:4px;padding:0 2px;color:inherit}
+.prow-empty td{text-align:center!important;color:#6B7280!important;font-size:14px;padding:22px!important;background:#fff!important;cursor:default}
+.prow-count{font-family:var(--font-m);font-size:12px;color:#4B5563;margin-top:8px}
+@keyframes rowin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#ptable tbody.fresh tr{animation:rowin .4s cubic-bezier(.16,1,.3,1) backwards}
+#ptable tbody.fresh tr:nth-child(2){animation-delay:.03s}
+#ptable tbody.fresh tr:nth-child(3){animation-delay:.06s}
+#ptable tbody.fresh tr:nth-child(4){animation-delay:.09s}
+#ptable tbody.fresh tr:nth-child(5){animation-delay:.12s}
+#ptable tbody.fresh tr:nth-child(6){animation-delay:.15s}
+@media(max-width:640px){.tscroll{max-height:420px}}
 #symOut{margin-top:10px;color:var(--lime);font-size:13px}
 .quiz-alt{background:#fff;color:#111}
 .quiz-alt h4{color:#111}
@@ -451,6 +469,7 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <tr data-g="Z"><td>Z Fold 6 SM-F956B</td><td class="num">55 000 ₽</td><td class="num">10 500 ₽ *</td><td class="num">6 200 ₽</td></tr>
 </tbody></table>
 </div>
+<div class="prow-count" id="rowCount"></div>
 <p class="note">* для Fold / Flip — замена двух АКБ. Полный прайс на 130+ моделей — у администратора. Это лишь популярные позиции с dixon-sc.ru.</p>
 <div class="quiz">
 <div class="quiz-card"><h4><svg aria-hidden="true"><use href="#i-zap"/></svg> Экспресс-оценка: что случилось?</h4><select id="sym" aria-label="Что случилось"><option value="screen">Разбит экран / не работает сенсор</option><option value="bat">Быстро садится / не заряжается</option><option value="back">Треснула задняя крышка</option><option value="water">Попала влага / не видит SIM</option></select><button id="symBtn">Показать ориентир →</button><p id="symOut" class="mono"></p></div>
@@ -535,9 +554,9 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 // counters
 const cio=new IntersectionObserver(e=>e.forEach(x=>{if(!x.isIntersecting)return;const el=x.target,end=+el.dataset.count;let s=0;const t=setInterval(()=>{s+=Math.max(1,Math.round(end/40));if(s>=end){s=end;clearInterval(t)}el.textContent=s},40);cio.unobserve(el)}),{threshold:.6});
 document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
-// search + filter
-const q=document.getElementById('q'),rows=[...document.querySelectorAll('#ptable tbody tr')];let f='all';
-function apply(){const v=q.value.toLowerCase();rows.forEach(r=>{const okG=(f==='all'||r.dataset.g===f);const okQ=r.textContent.toLowerCase().includes(v);r.style.display=(okG&&okQ)?'':'none'})}
+// search + filter (live rows: backend rebuilds tbody, so query each time)
+const q=document.getElementById('q');let f='all';
+function apply(){const v=q.value.trim().toLowerCase();const rows=[...document.querySelectorAll('#ptable tbody tr:not(.prow-empty)')];let n=0;rows.forEach(r=>{const td=r.cells[0];if(!td)return;if(!td.dataset.orig)td.dataset.orig=td.textContent;const name=td.dataset.orig;const okG=(f==='all'||r.dataset.g===f);const okQ=!v||name.toLowerCase().includes(v);const show=okG&&okQ;r.style.display=show?'':'none';if(show)n++;td.innerHTML='';if(v&&show){const i=name.toLowerCase().indexOf(v);if(i>=0){td.append(document.createTextNode(name.slice(0,i)));const m=document.createElement('mark');m.textContent=name.slice(i,i+v.length);td.append(m,document.createTextNode(name.slice(i+v.length)));return}}td.append(document.createTextNode(name))});const tb=document.querySelector('#ptable tbody');let emp=tb.querySelector('.prow-empty');if(n===0){if(!emp){emp=document.createElement('tr');emp.className='prow-empty';const td=document.createElement('td');td.colSpan=4;td.textContent='Ничего не нашли — позвоните 8 (8352) 36-42-02, подскажем.';emp.appendChild(td);tb.appendChild(emp)}}else if(emp)emp.remove();const c=document.getElementById('rowCount');if(c)c.textContent=n+' / '+rows.length}
 q.addEventListener('input',apply);
 document.querySelectorAll('.chipbtn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.chipbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');f=b.dataset.f;apply()});
 // quiz
@@ -566,7 +585,9 @@ const topics={display:'Разбит экран',battery:'Аккумулятор'
 function upd(){if(m.value===''){o.textContent='Выберите модель — покажем цену с работой.';return}const p=list[+m.value],k=j.value;let t=''+p.model+' — '+j.options[j.selectedIndex].text+': <b>'+fmt(p[k])+'</b>';if(p.note)t+='<br><span class="mini">Fold/Flip: пара АКБ меняется сразу.</span>';t+='<br><span class="go" id="calcGo">Оставить заявку на этот ремонт →</span>';o.innerHTML=t;document.getElementById('calcGo').onclick=()=>{const s=document.getElementById('leadTopic');if(s)s.value=topics[k];document.querySelector('#contacts').scrollIntoView({behavior:'smooth'})}}
 m.onchange=upd;j.onchange=upd;})();
 // price table from backend (static rows stay as fallback for no-JS/SEO)
-(async function(){let d=null;try{const r=await fetch('api/prices');d=await r.json()}catch(e){return}if(!d||!d.ok||!Array.isArray(d.prices))return;const tb=document.querySelector('#ptable tbody');if(!tb)return;const fmt=n=>Number(n).toLocaleString('ru-RU')+' ₽';tb.innerHTML='';d.prices.forEach(p=>{const tr=document.createElement('tr');tr.dataset.g=p.group;[p.model,fmt(p.display),fmt(p.battery),fmt(p.back)+(p.note?' *':'')].forEach((t,i)=>{const td=document.createElement('td');if(i>0)td.className='num';td.textContent=t;tr.appendChild(td)});tb.appendChild(tr)});if(typeof apply==='function')apply()})();
+(async function(){let d=null;try{const r=await fetch('api/prices');d=await r.json()}catch(e){return}if(!d||!d.ok||!Array.isArray(d.prices))return;const tb=document.querySelector('#ptable tbody');if(!tb)return;const fmt=n=>Number(n).toLocaleString('ru-RU')+' ₽';tb.innerHTML='';d.prices.forEach(p=>{const tr=document.createElement('tr');tr.dataset.g=p.group;[p.model,fmt(p.display),fmt(p.battery),fmt(p.back)+(p.note?' *':'')].forEach((t,i)=>{const td=document.createElement('td');if(i>0)td.className='num';td.textContent=t;tr.appendChild(td)});tb.appendChild(tr)});tb.classList.add('fresh');if(typeof apply==='function')apply()})();
+// price row -> calculator (delegated: survives backend tbody rebuild)
+document.querySelector('#ptable').addEventListener('click',e=>{const tr=e.target.closest('tbody tr');if(!tr||tr.classList.contains('prow-empty'))return;const m=document.getElementById('calcModel');if(!m||m.options.length<2)return;const name=((tr.cells[0].dataset.orig||tr.cells[0].textContent)||'').trim();let idx=-1;[...m.options].forEach((o,i)=>{if(o.textContent.trim()===name)idx=i});if(idx<0)return;m.value=m.options[idx].value;m.dispatchEvent(new Event('change',{bubbles:true}));document.querySelector('#calc').scrollIntoView({behavior:'smooth',block:'start'})});
 // burger menu
 const bg=document.getElementById('burger'),mm=document.getElementById('mmenu');
 if(bg&&mm){bg.onclick=()=>{const o=mm.classList.toggle('open');bg.textContent=o?'✕':'☰';bg.setAttribute('aria-expanded',o)};mm.querySelectorAll('a').forEach(a=>a.onclick=()=>{mm.classList.remove('open');bg.textContent='☰';bg.setAttribute('aria-expanded','false')})}
