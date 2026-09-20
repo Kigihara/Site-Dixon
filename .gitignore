@@ -2,9 +2,8 @@
 .playwright-cli/
 # Agent skills (tooling, not project code)
 .claude/
-# Backend runtime data (personal data!)
-data/
-*.log
+# Local secrets (NEVER commit: Supabase/TG tokens live here)
+.env
 # Backend runtime data (personal data!)
 data/
 *.log

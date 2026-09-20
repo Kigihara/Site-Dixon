@@ -2,7 +2,18 @@
 /* DIXON backend: static site + JSON API. Zero dependencies.
  * Run:  node server.js            (PORT env, default 8099)
  * Admin token: ADMIN_TOKEN env, default "dixon-12345" (change it!).
+ * Local secrets: copy .env.example to .env (gitignored, never commit).
  */
+try { // minimal .env loader (no deps): KEY=VALUE lines, env wins
+  const dotEnv = require("fs").readFileSync(require("path").join(__dirname, ".env"), "utf8");
+  for (const line of dotEnv.split(/\r?\n/)) {
+    const m = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/.exec(line);
+    if (!m || line.trim().startsWith("#")) continue;
+    let v = m[2];
+    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
+    if (!(m[1] in process.env)) process.env[m[1]] = v;
+  }
+} catch (e) {}
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
@@ -330,7 +341,9 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (req.method === "GET" && url.pathname === "/api/health") {
-      return send(res, 200, { ok: true, time: new Date().toISOString(), uptimeSec: Math.round((Date.now() - STARTED_AT) / 1000), leads: (await dbAll()).length, db: useSupa ? "supabase" : "sqlite" });
+      let n = -1;
+      try { n = (await dbAll()).length; } catch (e) {}
+      return send(res, 200, { ok: true, time: new Date().toISOString(), uptimeSec: Math.round((Date.now() - STARTED_AT) / 1000), leads: n, db: useSupa ? "supabase" : "sqlite" });
     }
     if (req.method === "GET" && url.pathname === "/api/prices") {
       return send(res, 200, { ok: true, updated: PRICES_UPDATED, prices: PRICES });
