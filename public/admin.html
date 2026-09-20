@@ -7,65 +7,140 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235B93FF'/%3E%3Ctext x='16' y='23' font-size='18' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%23111'%3ED%3C/text%3E%3C/svg%3E">
 <title>DIXON — заявки</title>
 <style>
-:root{--bg:#0B0E13;--surface:#121722;--line:rgba(255,255,255,.11);--lime:#5B93FF;--muted:#9AA3B5}
+:root{--bg:#0B0E13;--surface:#121722;--surface2:#171E2B;--line:rgba(255,255,255,.11);--lime:#5B93FF;--muted:#9AA3B5;--ok:#3DFF88;--bad:#FF7A7A}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:#EDEFF3;font-family:system-ui,sans-serif;padding:28px;max-width:1000px;margin:0 auto}
-h1{font-size:24px;margin-bottom:4px}h1 span{color:var(--lime)}
-p.sub{color:var(--muted);font-size:14px;margin-bottom:20px}
-.gate,.bar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
-input,button{font:inherit;border-radius:12px;padding:12px 16px}
-input{background:#0D121B;border:1px solid var(--line);color:#fff;flex:1;min-width:200px}
-input[type=checkbox]{background:none;border:none;padding:0;width:18px;height:18px;flex:none;accent-color:var(--lime)}
-button{background:var(--lime);border:none;font-weight:800;cursor:pointer;color:#111}
-button.ghost{background:transparent;border:1px solid var(--line);color:#fff}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th{text-align:left;font-size:11px;letter-spacing:.08em;color:var(--muted);padding:10px;border-bottom:1px solid var(--line)}
-td{padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
-tr.done td{opacity:.45;text-decoration:line-through}
-tr.done td:last-child{text-decoration:none}
-td button{padding:7px 12px;font-size:12.5px}
-.err{color:#FF7A7A;font-size:14px;margin-bottom:12px}
-.count{font-size:13px;color:var(--muted);margin-bottom:12px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
-.stat b{font-size:24px;display:block}.stat b em{font-style:normal;color:var(--lime)}
+body{background:var(--bg);color:#EDEFF3;font-family:system-ui,-apple-system,sans-serif;min-height:100vh}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px 60px}
+/* top bar */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(11,14,19,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1120px;margin:0 auto;padding:0 22px;height:62px;display:flex;align-items:center;gap:14px}
+.brand{font-weight:900;letter-spacing:.03em}.brand span{color:var(--lime)}
+.conn{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-family:ui-monospace,monospace}
+.conn i{width:8px;height:8px;border-radius:50%;background:#555}
+.conn.on i{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+button{font:inherit;border-radius:12px;padding:11px 18px;background:var(--lime);border:none;font-weight:800;cursor:pointer;color:#0A1830}
+button.ghost{background:rgba(255,255,255,.04);border:1px solid var(--line);color:#fff;font-weight:700}
+button.ghost:hover{border-color:var(--lime)}
+button.ghost.on{border-color:var(--lime);color:var(--lime)}
+button.danger{background:transparent;border:1px solid var(--bad);color:var(--bad);padding:7px 12px;font-size:12.5px}
+button.sm{padding:7px 12px;font-size:12.5px}
+button:active{transform:scale(.98)}
+input,select{font:inherit;border-radius:12px;padding:12px 16px;background:#0D121B;border:1px solid var(--line);color:#fff}
+input:focus{outline:2px solid var(--lime);border-color:var(--lime)}
+/* login */
+.login{min-height:70vh;display:grid;place-items:center}
+.login-card{width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:30px}
+.login-card h1{font-size:22px;margin-bottom:6px}.login-card h1 span{color:var(--lime)}
+.login-card p{color:var(--muted);font-size:13.5px;margin-bottom:18px}
+.login-card input{width:100%;margin-bottom:12px}
+.login-card button{width:100%}
+.err{color:var(--bad);font-size:14px;margin:12px 0;min-height:20px}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0 14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;gap:12px;align-items:center}
+.stat .ic{font-size:22px}
+.stat b{font-size:26px;display:block;line-height:1}.stat b em{font-style:normal;color:var(--lime)}
 .stat span{font-size:12px;color:var(--muted)}
-button.danger{background:transparent;border:1px solid #FF7A7A;color:#FF7A7A}
+/* toolbar */
+.toolbar{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.toolbar .grow{flex:1;min-width:180px;display:flex}
+.toolbar .grow input{flex:1}
+.switch{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none;padding:8px 4px}
+.switch input{position:absolute;opacity:0;width:0;height:0}
+.switch .tr{width:38px;height:22px;border-radius:99px;background:rgba(255,255,255,.14);position:relative;transition:.25s;flex:none}
+.switch .tr::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.25s}
+.switch input:checked+.tr{background:var(--lime)}
+.switch input:checked+.tr::after{left:19px}
+.switch input:focus-visible+.tr{outline:2px solid var(--lime);outline-offset:2px}
+.count{font-size:12.5px;color:var(--muted);margin-left:auto}
+/* table card */
+.tcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.tscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
+thead th{position:sticky;top:0;text-align:left;font-size:11px;letter-spacing:.08em;color:var(--muted);padding:12px;background:var(--surface2);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle}
+tbody tr:hover td{background:rgba(255,255,255,.025)}
+tbody tr:last-child td{border-bottom:none}
+tr.done td{opacity:.45}
+tr.done td .pill{opacity:1}
 tr.fresh{box-shadow:inset 3px 0 var(--lime)}
-#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(16px);background:var(--lime);color:#111;font-weight:800;padding:13px 22px;border-radius:12px;opacity:0;pointer-events:none;transition:.3s;z-index:99;font-size:14px}
+.pill{display:inline-block;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.pill.new{background:rgba(61,255,136,.12);color:var(--ok);border:1px solid rgba(61,255,136,.35)}
+.pill.done{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--line)}
+td .tel{color:#fff;font-family:ui-monospace,monospace;text-decoration:none;white-space:nowrap}
+td .tel:hover{color:var(--lime)}
+td .when{white-space:nowrap;color:#C7CEDB}
+td .acts{white-space:nowrap;display:flex;gap:6px}
+/* price editor */
+#pedit{margin-bottom:14px}
+#pedit .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+#pedit table{min-width:520px}
+#pedit table input{width:96px;padding:8px}
+/* toast */
+.toolbar.plain{border:none;padding:0;margin-bottom:12px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(16px);background:var(--lime);color:#0A1830;font-weight:800;padding:13px 22px;border-radius:12px;opacity:0;pointer-events:none;transition:.3s;z-index:99;font-size:14px}
 #toast.show{opacity:1;transform:translateX(-50%)}
-.live{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
 .hidden{display:none!important}
-.footback{margin-top:22px}
-#pedit{margin-bottom:18px}
-#pedit table input{width:92px;padding:8px}
-@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}
-a.back{color:var(--lime);font-size:14px}
+.foot{margin-top:26px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+a.back{color:var(--lime);font-size:14px;text-decoration:none}
+@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}.wrap{padding:0 14px 90px}}
 </style>
 </head>
 <body>
+<div class="topbar"><div class="topbar-in">
+<div class="brand">DIXON <span>• пульт</span></div>
+<div class="conn" id="conn"><i></i><span>offline</span></div>
+<button class="ghost sm hidden" id="logout">Выйти</button>
+</div></div>
+
+<div class="wrap">
+<div class="login" id="loginBox"><div class="login-card">
 <h1>DIXON <span>• заявки</span></h1>
-<p class="sub">Служебная страница. Токен задаётся переменной ADMIN_TOKEN.</p>
-<div class="gate" id="gate"><input id="tok" type="password" placeholder="Токен доступа" autocomplete="off"><button id="go">Войти</button></div>
+<p>Служебная консоль. Токен задаётся переменной ADMIN_TOKEN.</p>
+<input id="tok" type="password" placeholder="Токен доступа" autocomplete="off">
+<button id="go">Войти</button>
 <div class="err" id="err"></div>
-<div class="stats hidden" id="stats">
-<div class="stat"><b><em id="stTotal">0</em></b><span>всего заявок</span></div>
-<div class="stat"><b><em id="stOpen">0</em></b><span>новые</span></div>
-<div class="stat"><b><em id="stDone">0</em></b><span>завершено</span></div>
-<div class="stat"><b><em id="stToday">0</em></b><span>сегодня</span></div>
+</div></div>
+
+<div id="app" class="hidden">
+<div class="stats" id="stats">
+<div class="stat"><span class="ic">📥</span><div><b><em id="stTotal">0</em></b><span>всего заявок</span></div></div>
+<div class="stat"><span class="ic">🆕</span><div><b><em id="stOpen">0</em></b><span>новые</span></div></div>
+<div class="stat"><span class="ic">✅</span><div><b><em id="stDone">0</em></b><span>завершено</span></div></div>
+<div class="stat"><span class="ic">📅</span><div><b><em id="stToday">0</em></b><span>сегодня</span></div></div>
 </div>
-<div class="bar hidden" id="bar"><input id="q" placeholder="Поиск: имя, телефон, тема"><button class="ghost" id="reload">Обновить</button><button class="ghost" id="csv">Скачать CSV</button><button class="ghost" id="blank">Бланк гарантии</button><button class="ghost" id="ptoggle">Цены</button><label class="live"><input type="checkbox" id="live" checked> live</label><span class="count" id="count"></span></div>
-<div id="pedit" class="hidden">
-<div class="bar"><button class="ghost" id="psave">Сохранить цены</button><span class="count">Только числа, в рублях. Дата обновится сама.</span></div>
-<table><thead><tr><th>Модель</th><th>Дисплей</th><th>АКБ</th><th>Крышка</th></tr></thead><tbody id="prows"></tbody></table>
+
+<div class="toolbar" id="bar">
+<div class="grow"><input id="q" placeholder="Поиск: имя, телефон, тема" aria-label="Поиск по заявкам"></div>
+<button class="ghost" id="reload">Обновить</button>
+<button class="ghost" id="ptoggle">Цены</button>
+<button class="ghost" id="csv">CSV</button>
+<button class="ghost" id="blank">Бланк</button>
+<label class="switch"><input type="checkbox" id="live" checked><span class="tr"></span>live</label>
+<span class="count" id="count"></span>
 </div>
-<table id="tbl" class="hidden"><thead><tr><th>#</th><th>Когда</th><th>Имя</th><th>Телефон</th><th>Тема</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+
+<div id="pedit" class="hidden"><div class="panel">
+<div class="toolbar plain"><button class="ghost" id="psave">Сохранить цены</button><span class="count">Только числа, в рублях. Дата обновится сама.</span></div>
+<div class="tscroll"><table><thead><tr><th>Модель</th><th>Дисплей</th><th>АКБ</th><th>Крышка</th></tr></thead><tbody id="prows"></tbody></table></div>
+</div></div>
+
+<div class="tcard"><div class="tscroll"><table id="tbl">
+<thead><tr><th>#</th><th>Статус</th><th>Когда</th><th>Клиент</th><th>Телефон</th><th>Тема</th><th></th></tr></thead>
+<tbody id="rows"></tbody>
+</table></div></div>
+
+<div class="foot"><a class="back" href="./">← На сайт</a><span id="ver">v1.9</span></div>
+</div>
+</div>
+
 <div id="toast"></div>
-<p class="footback"><a class="back" href="./">← На сайт</a></p>
+
 <script>
 if(location.protocol==='file:')document.getElementById('err').textContent='Откройте страницу через сервер: запустите start.bat, затем http://127.0.0.1:8099/admin.html';
 let token="";
 const $=id=>document.getElementById(id);
+function setConn(on){const c=$("conn");c.classList.toggle("on",!!on);c.querySelector("span").textContent=on?"online":"offline"}
 async function api(path,opts){
   opts=opts||{};opts.headers=Object.assign({"X-Admin-Token":token},opts.headers||{});
   const r=await fetch(path,opts);
@@ -74,6 +149,7 @@ async function api(path,opts){
   return j;
 }
 function fmt(ts){try{return new Date(ts).toLocaleString("ru-RU",{timeZone:"Europe/Moscow"})}catch(e){return ts}}
+function ago(ts){try{const s=(Date.now()-new Date(ts).getTime())/1000;if(s<60)return"только что";if(s<3600)return Math.floor(s/60)+" мин назад";if(s<86400)return Math.floor(s/3600)+" ч назад";return Math.floor(s/86400)+" дн назад"}catch(e){return""}}
 let allLeads=[];
 let lastMax=0;
 const baseTitle=document.title;
@@ -81,30 +157,33 @@ function render(){
   const q=$("q").value.trim().toLowerCase();
   const tb=$("rows");tb.innerHTML="";
   const list=allLeads.filter(l=>!q||l.name.toLowerCase().includes(q)||l.phone.includes(q)||l.topic.toLowerCase().includes(q));
-  $("count").textContent="Показано: "+list.length+" из "+allLeads.length;
-    list.forEach(l=>{
-      const tr=document.createElement("tr");
-      if(l.done)tr.className="done";
-      if(lastMax>0&&l.id>lastMax)tr.className+=(tr.className?" ":"")+"fresh";
-      tr.innerHTML="<td>"+l.id+"</td><td style='white-space:nowrap'>"+fmt(l.ts)+"</td><td></td><td style='white-space:nowrap'>"+l.phone+"</td><td></td><td style='white-space:nowrap'></td>";
-      tr.children[2].textContent=l.name;
-      tr.children[4].textContent=l.topic;
-      const b=document.createElement("button");
-      b.textContent=l.done?"Вернуть":"Готово";
-      b.onclick=async()=>{await api("api/leads/"+l.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({done:!l.done})});load()};
-      const d=document.createElement("button");
-      d.textContent="✕";d.className="danger";d.title="Удалить";
-      d.onclick=async()=>{if(confirm("Удалить заявку №"+l.id+"?")){await api("api/leads/"+l.id,{method:"DELETE"});load()}};
-      tr.children[5].appendChild(b);
-      tr.children[5].appendChild(document.createTextNode(" "));
-      tr.children[5].appendChild(d);
-      tb.appendChild(tr);
+  $("count").textContent=list.length+" из "+allLeads.length;
+  list.forEach(l=>{
+    const tr=document.createElement("tr");
+    if(l.done)tr.className="done";
+    if(lastMax>0&&l.id>lastMax)tr.className+=(tr.className?" ":"")+"fresh";
+    const pill=l.done?'<span class="pill done">Готово</span>':'<span class="pill new">Новая</span>';
+    tr.innerHTML="<td>"+l.id+"</td><td>"+pill+'</td><td><span class="when" title="'+fmt(l.ts)+'">'+ago(l.ts)+"</span></td><td></td>"+
+      '<td><a class="tel" href="tel:'+l.phone.replace(/\D/g,"")+'">'+l.phone+"</a></td><td></td>"+
+      '<td><span class="acts"></span></td>';
+    tr.children[3].textContent=l.name;
+    tr.children[5].textContent=l.topic;
+    const box=tr.querySelector(".acts");
+    const b=document.createElement("button");
+    b.className="ghost sm";b.textContent=l.done?"Вернуть":"Готово";
+    b.onclick=async()=>{await api("api/leads/"+l.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({done:!l.done})});load()};
+    const d=document.createElement("button");
+    d.className="danger";d.textContent="✕";d.title="Удалить";
+    d.onclick=async()=>{if(confirm("Удалить заявку №"+l.id+"?")){await api("api/leads/"+l.id,{method:"DELETE"});load()}};
+    box.appendChild(b);box.appendChild(d);
+    tb.appendChild(tr);
   });
 }
 async function load(){
   $("err").textContent="";
   try{
     const j=await api("api/leads");
+    setConn(true);
     allLeads=j.leads;
     render();
     lastMax=Math.max(lastMax||0,...allLeads.map(l=>l.id),0);
@@ -112,30 +191,45 @@ async function load(){
       const s=await api("api/stats");
       $("stTotal").textContent=s.total;$("stOpen").textContent=s.open;
       $("stDone").textContent=s.done;$("stToday").textContent=s.today;
-      $("stats").classList.remove("hidden");
       document.title=s.open>0?"("+s.open+") "+baseTitle:baseTitle;
     }catch(e){}
-    $("tbl").classList.remove("hidden");$("bar").classList.remove("hidden");
-  }catch(e){$("err").textContent="Ошибка: "+e.message}
+  }catch(e){setConn(false);$("err").textContent="Ошибка: "+e.message}
 }
-$("go").onclick=()=>{token=$("tok").value.trim();if(token){load();connectLive()}};
+function enter(){
+  $("loginBox").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  $("logout").classList.remove("hidden");
+  load();connectLive();
+}
+$("go").onclick=()=>{token=$("tok").value.trim();if(token)enter()};
 $("tok").addEventListener("keydown",e=>{if(e.key==="Enter")$("go").click()});
+$("logout").onclick=()=>location.reload();
 $("reload").onclick=load;
 $("q").addEventListener("input",render);
 $("csv").onclick=async()=>{try{const r=await fetch("api/leads.csv",{headers:{"X-Admin-Token":token}});if(!r.ok)throw new Error();const b=await r.blob();const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="dixon-leads.csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}catch(e){$("err").textContent="Ошибка: не скачалось"}};
 $("blank").onclick=()=>{open("./garantiya.html","_blank")};
-$("ptoggle").onclick=async()=>{const p=$("pedit");if(!p.classList.contains("hidden")){p.classList.add("hidden");return}try{const j=await api("api/prices");const tb=$("prows");tb.innerHTML="";j.prices.forEach((r,i)=>{const tr=document.createElement("tr");tr.innerHTML="<td></td>";tr.children[0].textContent=r.model;["display","battery","back"].forEach(k=>{const td=document.createElement("td");const inp=document.createElement("input");inp.value=r[k];inp.inputMode="numeric";inp.dataset.i=i;inp.dataset.k=k;td.appendChild(inp);tr.appendChild(td)});tb.appendChild(tr)});p.classList.remove("hidden")}catch(e){$("err").textContent="Ошибка: "+e.message}};
+$("ptoggle").onclick=async()=>{
+  const p=$("pedit");
+  $("ptoggle").classList.toggle("on",p.classList.contains("hidden"));
+  if(!p.classList.contains("hidden")){p.classList.add("hidden");return}
+  try{
+    const j=await api("api/prices");const tb=$("prows");tb.innerHTML="";
+    j.prices.forEach((r,i)=>{const tr=document.createElement("tr");tr.innerHTML="<td></td>";tr.children[0].textContent=r.model;["display","battery","back"].forEach(k=>{const td=document.createElement("td");const inp=document.createElement("input");inp.value=r[k];inp.inputMode="numeric";inp.dataset.i=i;inp.dataset.k=k;inp.setAttribute("aria-label",r.model+" "+k);td.appendChild(inp);tr.appendChild(td)});tb.appendChild(tr)});
+    p.classList.remove("hidden");
+  }catch(e){$("err").textContent="Ошибка: "+e.message}
+};
 $("psave").onclick=async()=>{try{const cur=await api("api/prices");const prices=cur.prices.map(r=>({model:r.model,group:r.group,display:r.display,battery:r.battery,back:r.back}));document.querySelectorAll("#prows input").forEach(inp=>{const v=parseInt(String(inp.value).replace(/\D/g,""),10);prices[+inp.dataset.i][inp.dataset.k]=isNaN(v)?0:v});const r=await fetch("api/prices",{method:"PUT",headers:{"Content-Type":"application/json","X-Admin-Token":token},body:JSON.stringify({prices})});const j=await r.json();if(!j.ok)throw new Error(j.error||"error");toast("Цены сохранены ("+j.updated+")")}catch(e){$("err").textContent="Ошибка: "+e.message}};
-setInterval(()=>{const lv=document.querySelector('#live');if(lv&&lv.checked&&token)load()},30000);
+setInterval(()=>{const lv=$("live");if(lv&&lv.checked&&token)load()},30000);
 let esToast=null;
 function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(esToast);esToast=setTimeout(()=>t.classList.remove("show"),4000)}
 function connectLive(){
   try{
+    setConn(true);
     const src=new EventSource("api/events?token="+encodeURIComponent(token));
     src.addEventListener("lead:new",e=>{try{const d=JSON.parse(e.data);toast("Новая заявка №"+d.id)}catch(_){}load()});
     src.addEventListener("lead:update",()=>load());
     src.addEventListener("lead:delete",()=>load());
-    src.onerror=()=>{src.close()};
+    src.onerror=()=>{setConn(false);src.close()};
   }catch(e){}
 }
 </script>
