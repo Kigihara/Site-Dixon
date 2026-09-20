@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="DIXON — ремонт Samsung в Чебоксарах за день">
 <meta property="og:description" content="Экраны, аккумуляторы, корпуса. Оригинальные запчасти, гарантия до 12 месяцев. Калинина, 91к1.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"DIXON — сервисный центр Samsung","telephone":"+7 8352 36-42-02","email":"manager@dixon-sc.ru","address":{"@type":"PostalAddress","addressLocality":"Чебоксары","streetAddress":"ул. Калинина, 91к1","addressCountry":"RU"},"openingHours":"Mo-Su 09:00-20:00","priceRange":"₽₽"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"DIXON — сервисный центр Samsung","telephone":"+7 8352 36-42-02","email":"manager@dixon-sc.ru","address":{"@type":"PostalAddress","addressLocality":"Чебоксары","streetAddress":"ул. Калинина, 91к1","addressCountry":"RU"},"openingHours":"Mo-Su 09:00-19:00","priceRange":"₽₽"}</script>
 <link rel="preload" href="./fonts/unbounded-cyrillic-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="./fonts/manrope-cyrillic-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./fonts/fonts.css">
@@ -61,6 +61,7 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);background:rg
 @media(min-width:1700px){.status-dot{display:flex}}
 .nav-links a,.phone-big,.nav .btn{white-space:nowrap}
 .status-dot i{width:8px;height:8px;border-radius:50%;background:#3DFF88;box-shadow:0 0 12px #3DFF88;animation:pulse 1.8s infinite}
+.status-dot.closed i{background:#FF5D5D;box-shadow:0 0 12px #FF5D5D;animation:none}
 @keyframes pulse{50%{opacity:.4}}
 .btn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:14px 22px;font-weight:800;font-size:15px;border:1px solid transparent;cursor:pointer;transition:transform .25s cubic-bezier(.16,1,.3,1),background .25s,color .25s;white-space:nowrap}
 .btn-lime{background:var(--lime);color:var(--lime-ink)}
@@ -313,6 +314,13 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 #ptable mark{background:rgba(91,147,255,.4);border-radius:4px;padding:0 2px;color:inherit}
 .prow-empty td{text-align:center!important;color:#6B7280!important;font-size:14px;padding:22px!important;background:#fff!important;cursor:default}
 .prow-count{font-family:var(--font-m);font-size:12px;color:#4B5563;margin-top:8px}
+/* v1.26 extras: flat services under price table */
+.extras{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.extra{background:#fff;border:1.5px solid #0E1218;border-radius:16px;padding:16px 18px;display:flex;gap:12px;align-items:center;justify-content:space-between}
+.extra h4{font-size:14.5px}
+.extra p{font-size:13px;color:#4B5563;margin-top:4px}
+.extra b{font-family:var(--font-m);font-size:17px;white-space:nowrap}
+@media(max-width:1150px){.extras{grid-template-columns:1fr}}
 @keyframes rowin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 #ptable tbody.fresh tr{animation:rowin .4s cubic-bezier(.16,1,.3,1) backwards}
 #ptable tbody.fresh tr:nth-child(2){animation-delay:.03s}
@@ -430,7 +438,7 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <div class="nav-links"><a href="#fix">Неисправности</a><a href="#why">Преимущества</a><a href="#price">Цены</a><a href="#steps">Как мы работаем</a><a href="#faq">Вопросы</a><a href="#contacts">Контакты</a></div>
 <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">☰</button>
 <div class="nav-right">
-<span class="status-dot"><i></i><span id="openState">Открыто • до 20:00</span></span>
+<span class="status-dot"><i></i><span id="openState">Открыто • до 19:00</span></span>
 <a class="phone-big mono" href="tel:+78352364202">8 352 36-42-02</a>
 <a class="btn btn-lime" href="#contacts" data-magnet>Записаться</a>
 </div>
@@ -520,6 +528,11 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 </tbody></table>
 </div>
 <div class="prow-count" id="rowCount"></div>
+<div class="extras">
+<div class="extra"><div><h4>Калибровка АКБ</h4><p>Меняли аккумулятор в другом сервисе, а цикл заряда не сбросили? Не беда — поправим.</p></div><b>2 500 ₽</b></div>
+<div class="extra"><div><h4>Калибровка сканера отпечатка</h4><p>Подэкранный сканер после замены дисплея.</p></div><b>2 500 ₽</b></div>
+<div class="extra"><div><h4>Официальная разблокировка</h4><p>Samsung, Huawei, Honor, Tecno, Infinix.</p></div><b>по запросу</b></div>
+</div>
 <p class="note">* для Fold / Flip — замена двух АКБ. Полный прайс на 130+ моделей — у администратора. Это лишь популярные позиции с dixon-sc.ru.</p>
 <div class="quiz">
 <div class="quiz-card"><h4><svg aria-hidden="true"><use href="#i-zap"/></svg> Экспресс-оценка: что случилось?</h4><select id="sym" aria-label="Что случилось"><option value="screen">Разбит экран / не работает сенсор</option><option value="bat">Быстро садится / не заряжается</option><option value="back">Треснула задняя крышка</option><option value="water">Попала влага / не видит SIM</option></select><button id="symBtn">Показать ориентир →</button><p id="symOut" class="mono"></p></div>
@@ -555,10 +568,10 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <div class="faq-item reveal"><button>Сколько ждать ремонт?<span class="ic">+</span></button><div class="ans"><p>Аккумулятор и разъёмы — от 40 минут, экраны — 2–4 часа, сложная пайка и «утопленники» — до 2 дней. Срок называем до начала работ.</p></div></div>
 <div class="faq-item reveal"><button>Запчасти оригинальные?<span class="ic">+</span></button><div class="ans"><p>Да, только оригинальные, со склада в Чебоксарах. На работы и комплектующие даём официальную гарантию до 12 месяцев.</p></div></div>
 <div class="faq-item reveal"><button>Цена в прайсе окончательная?<span class="ic">+</span></button><div class="ans"><p>Цену фиксируем после диагностики — никаких «вскрыли, доплатите». Учтите: прайс указан на чёрный цвет, на другие цвета стоимость может отличаться.</p></div></div>
-<div class="faq-item reveal"><button>Нужно ли записываться заранее?<span class="ic">+</span></button><div class="ans"><p>Нет, принимаем в порядке живой очереди ежедневно с 9:00 до 20:00. Но заявка с сайта ускорит приём — перезвоним за 10 минут.</p></div></div>
+<div class="faq-item reveal"><button>Нужно ли записываться заранее?<span class="ic">+</span></button><div class="ans"><p>Нет, принимаем в порядке живой очереди ежедневно с 9:00 до 19:00. Но заявка с сайта ускорит приём — перезвоним за 10 минут.</p></div></div>
 <div class="faq-item reveal"><button>Что будет с моими данными?<span class="ic">+</span></button><div class="ans"><p>Ничего не трогаем и не копируем. Но перед ремонтом рекомендуем сделать резервную копию — на всякий случай.</p></div></div>
 </div>
-<aside class="faq-side reveal"><h3>Не нашли свой случай?</h3><p>Позвоните — ответим за минуту и назовём точную цену с работой.</p><a class="btn btn-lime" href="tel:+78352364202" data-magnet>36-42-02</a><span class="mono">ежедневно 9:00–20:00</span></aside>
+<aside class="faq-side reveal"><h3>Не нашли свой случай?</h3><p>Позвоните — ответим за минуту и назовём точную цену с работой.</p><a class="btn btn-lime" href="tel:+78352364202" data-magnet>36-42-02</a><span class="mono">ежедневно 9:00–19:00</span></aside>
 </div>
 </section>
 
@@ -577,10 +590,10 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 
 <div class="c-card reveal"><h3>DIXON • Чебоксары</h3>
 <div class="c-line"><svg aria-hidden="true"><use href="#i-pin"/></svg><div>ул. Калинина, 91к1<small>вход с торца, вывеска DIXON • парковка во дворе</small></div></div>
-<div class="c-line"><svg aria-hidden="true"><use href="#i-phone"/></svg><div><a class="tel" href="tel:+78352364202">8 (8352) 36-42-02</a><small>ежедневно 9:00–20:00 • <span id="msk">--:--</span> МСК</small></div></div>
+<div class="c-line"><svg aria-hidden="true"><use href="#i-phone"/></svg><div><a class="tel" href="tel:+78352364202">8 (8352) 36-42-02</a><small>ежедневно 9:00–19:00 • <span id="msk">--:--</span> МСК</small></div></div>
 <div class="c-line"><svg aria-hidden="true"><use href="#i-mail"/></svg><div><a href="mailto:manager@dixon-sc.ru">manager@dixon-sc.ru</a><small>фото поломки — сразу оценим</small></div></div>
 <div class="route-btns"><a data-map="Чебоксары, улица Калинина, 91к1" href="#">Яндекс Карты →</a><a data-gis="Чебоксары, Калинина 91к1" href="#">Маршрут в 2ГИС →</a></div>
-<div class="hours" id="hoursLine">● сегодня принимаем до 19:30</div>
+<div class="hours" id="hoursLine">● сегодня принимаем до 18:30</div>
 </div>
 <div class="c-card reveal"><h3>Оставить заявку — перезвоним за 10 минут</h3>
 <form class="calc" id="leadForm"><input required placeholder="Ваше имя" name="n" id="leadName" aria-label="Ваше имя" autocomplete="name"><input required placeholder="Телефон" name="p" id="leadPhone" aria-label="Телефон" inputmode="tel" autocomplete="tel"><input name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true"><select name="t" id="leadTopic" aria-label="Тема обращения"><option>Разбит экран</option><option>Аккумулятор</option><option>Корпус / крышка</option><option>Не заряжается / разъём</option><option>Другое</option></select><label class="cons"><input type="checkbox" id="leadConsent" checked><span>Согласен на обработку персональных данных</span></label><details class="priv"><summary>Как мы храним данные</summary><p>Имя и телефон хранятся только на компьютере сервиса в Чебоксарах и нужны исключительно для обратного звонка. Никому не передаём, удалим по первой просьбе — позвоните 36-42-02.</p></details><button class="btn btn-lime" type="submit">Жду звонка →</button><p class="mono" id="formOk"></p></form>
@@ -590,7 +603,7 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 
 <a class="callbar" href="tel:+78352364202">Позвонить: 8 (8352) 36-42-02</a>
 <button id="toTop" aria-label="Наверх">↑</button>
-<footer><div class="wrap foot"><span>Сервисный центр DIXON © 2022–2026 • Чебоксары, Калинина 91к1</span><span class="mono">Цены с dixon-sc.ru • редизайн-концепт</span><a href="https://www.tclmobile.ru/">Официальный сайт TCL →</a><a href="./admin.html">Сотрудникам</a></div></footer>
+<footer><div class="wrap foot"><span>Сервисный центр DIXON © 2022–2026 • Чебоксары, Калинина 91к1</span><a href="./admin.html">Сотрудникам</a></div></footer>
 
 <script>
 // loader
@@ -617,7 +630,7 @@ const out=document.getElementById('symOut');
 document.getElementById('symBtn').onclick=()=>{const v=document.getElementById('sym').value;const m={screen:'Экран: от 3 500 ₽ (A) / 13–21 тыс. ₽ (S) — точно по модели выше.',bat:'АКБ с работой: 4 200–7 400 ₽, Fold/Flip — 10 500 ₽ за пару.',back:'Крышка с работой: 2 000–7 500 ₽. Цвет уточняйте.',water:'Влага/SIM/Wi-Fi: от 1 500 ₽ после бесплатной диагностики.'};out.textContent='→ '+m[v]};
 // clock
 if(location.protocol==='file:'){document.getElementById('formOk').textContent='Форма заработает после запуска сервера: откройте start.bat в папке сайта.';}
-function tick(){try{document.getElementById('msk').textContent=new Date().toLocaleTimeString('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit'})}catch(e){}const h=new Date().getHours();document.getElementById('openState').textContent=(h>=9&&h<20)?'Открыто • до 20:00':'Закрыто • с 9:00'}setInterval(tick,30000);tick();
+function tick(){try{document.getElementById('msk').textContent=new Date().toLocaleTimeString('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit'})}catch(e){}const h=new Date().getHours(),open=h>=9&&h<19;document.getElementById('openState').textContent=open?'Открыто • до 19:00':'Закрыто • с 9:00';document.querySelectorAll('.status-dot').forEach(d=>d.classList.toggle('closed',!open))}setInterval(tick,30000);tick();
 // term typing
 const lines=['> calibrating touch… ok','> sealing + pressure test… ok','> ready for pickup ✓'];let li2=0;setInterval(()=>{document.getElementById('termLine').textContent=lines[li2++%lines.length]},2600);
 // magnetic
