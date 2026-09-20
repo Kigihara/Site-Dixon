@@ -1,6 +1,6 @@
 {
   "name": "dixon-site",
-  "version": "1.33.0",
+  "version": "1.34.0",
   "description": "DIXON service center site + backend (zero deps)",
   "main": "server.js",
   "scripts": {

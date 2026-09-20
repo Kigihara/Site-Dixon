@@ -267,7 +267,16 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 .faq-item.open>button span.ic{transform:rotate(45deg)}
 .faq-item .ans{max-height:0;overflow:hidden;transition:max-height .35s ease;color:#AEB6C6;font-size:14.5px}
 .faq-item .ans p{padding:0 20px 18px;max-width:65ch}
-/* reviews */
+/* v1.34 reviews: platform badges + card headers */
+.rev-top{display:flex;gap:14px;align-items:center}
+.rev-badge{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-family:var(--font-d);font-weight:800;font-size:19px;flex:none}
+.rev-badge.b-yandex{background:#FC3F1D;color:#fff}
+.rev-badge.b-gis{background:#00A86B;color:#fff}
+.rev-badge.b-sale{background:var(--lime);color:var(--lime-ink)}
+.rev-top h3{font-size:17px}
+.rev-top .stars{font-size:12px}
+.rev-card a{display:inline-flex;align-items:center;gap:6px;transition:gap .25s}
+.rev-card a:hover{gap:12px}
 .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .rev-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:10px}
 .rev-card .stars{color:var(--lime);letter-spacing:3px;font-size:14px}
@@ -586,9 +595,9 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <section class="block wrap" id="reviews">
 <div class="sec-head reveal"><h2>Нас советуют соседям</h2><p>Мы не выдумываем отзывы — почитайте живые на картах. Были у нас? Расскажите, это помогает другим решиться.</p></div>
 <div class="rev-grid">
-<div class="rev-card reveal"><div class="stars">★★★★★</div><h3>Яндекс Карты</h3><p>Оценки и отзывы посетителей сервисного центра на Калинина, 91к1.</p><a data-map="Чебоксары, улица Калинина, 91к1" href="#">Читать отзывы →</a></div>
-<div class="rev-card reveal"><div class="stars">★★★★★</div><h3>2ГИС</h3><p>Рейтинг организации, фото и отзывы чебоксарцев.</p><a data-gis="Чебоксары, Калинина 91к1" href="#">Открыть в 2ГИС →</a></div>
-<div class="rev-card reveal"><div class="stars">★★★★★</div><h3>Постоянным клиентам — скидки</h3><p>Чинили у нас раньше? Назовите номер прошлого заказа — сделаем скидку на следующий ремонт.</p><a href="tel:+78352364202">Уточнить по телефону →</a></div>
+<div class="rev-card reveal"><div class="rev-top"><span class="rev-badge b-yandex">Я</span><div><h3>Яндекс Карты</h3><div class="stars">★★★★★</div></div></div><p>Оценки и отзывы посетителей сервисного центра на Калинина, 91к1.</p><a data-map="Чебоксары, улица Калинина, 91к1" href="#">Читать отзывы →</a></div>
+<div class="rev-card reveal"><div class="rev-top"><span class="rev-badge b-gis">2Г</span><div><h3>2ГИС</h3><div class="stars">★★★★★</div></div></div><p>Рейтинг организации, фото и отзывы чебоксарцев.</p><a data-gis="Чебоксары, Калинина 91к1" href="#">Открыть в 2ГИС →</a></div>
+<div class="rev-card reveal"><div class="rev-top"><span class="rev-badge b-sale">%</span><div><h3>Постоянным — скидки</h3></div></div><p>Чинили у нас раньше? Назовите номер прошлого заказа — сделаем скидку на следующий ремонт.</p><a href="tel:+78352364202">Уточнить по телефону →</a></div>
 </div>
 </section>
 
