@@ -126,6 +126,68 @@ function broadcast(type, data) {
   }
 }
 
+// ---- telegram two-way sync (zero deps, long-poll) ----
+function tgApi(method, payload) {
+  if (!process.env.TG_BOT) return Promise.resolve(null);
+  return fetch("https://api.telegram.org/bot" + process.env.TG_BOT + "/" + method, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload || {}),
+  }).then((r) => r.json().catch(() => null)).catch(() => null);
+}
+function tgNotify(lead) {
+  if (!process.env.TG_BOT || !process.env.TG_CHAT) return;
+  tgApi("sendMessage", {
+    chat_id: process.env.TG_CHAT,
+    text: "🆕 Заявка #" + lead.id + "\n👤 " + lead.name + "\n📞 " + lead.phone + "\n🛠 " + lead.topic,
+    reply_markup: { inline_keyboard: [[{ text: "✅ Принять", callback_data: "accept:" + lead.id }]] },
+  });
+}
+let tgOffset = 0;
+async function tgPollOnce() {
+  let data = null;
+  try {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 32000);
+    const r = await fetch("https://api.telegram.org/bot" + process.env.TG_BOT + "/getUpdates", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ offset: tgOffset, timeout: 25, allowed_updates: ["callback_query"] }),
+      signal: ctl.signal,
+    });
+    clearTimeout(timer);
+    data = await r.json().catch(() => null);
+  } catch (e) { data = null; }
+  if (!data || !data.ok) return false;
+  for (const u of (data.result || [])) {
+    tgOffset = u.update_id + 1;
+    const cb = u.callback_query;
+    if (!cb || typeof cb.data !== "string") continue;
+    const m = /^accept:(\d+)$/.exec(cb.data);
+    if (!m) { tgApi("answerCallbackQuery", { callback_query_id: cb.id, text: "?" }); continue; }
+    const lead = leads.find((l) => l.id === Number(m[1]));
+    if (!lead) { tgApi("answerCallbackQuery", { callback_query_id: cb.id, text: "Заявка не найдена" }); continue; }
+    if (lead.done) { tgApi("answerCallbackQuery", { callback_query_id: cb.id, text: "Уже завершена" }); continue; }
+    if (lead.accepted) { tgApi("answerCallbackQuery", { callback_query_id: cb.id, text: "Уже принята" }); continue; }
+    lead.accepted = true;
+    saveLeads();
+    broadcast("lead:update", { id: lead.id, accepted: true });
+    tgApi("answerCallbackQuery", { callback_query_id: cb.id, text: "Принята ✅" });
+    if (cb.message) {
+      tgApi("editMessageReplyMarkup", { chat_id: cb.message.chat.id, message_id: cb.message.message_id, reply_markup: { inline_keyboard: [] } });
+    }
+  }
+  return true;
+}
+async function tgPollLoop() {
+  try { // discard backlog from downtime so old buttons don't spam
+    const r = await tgApi("getUpdates", { timeout: 0 });
+    if (r && r.ok && Array.isArray(r.result) && r.result.length) tgOffset = r.result[r.result.length - 1].update_id + 1;
+  } catch (e) {}
+  for (;;) {
+    const ok = await tgPollOnce();
+    if (!ok) await new Promise((r) => setTimeout(r, 5000));
+  }
+}
+
 // ---- rate limit: 20 POST /api/lead per IP per minute ----
 const hits = new Map();
 function rateLimited(ip) {
@@ -234,14 +296,11 @@ const server = http.createServer(async (req, res) => {
       if (String(body.company || "").trim() !== "") return send(res, 200, { ok: true, id: 0, quiet: true }); // honeypot: pretend success
       const dupe = leads.find((l) => l.phone === phone && l.topic === topic && (Date.now() - new Date(l.ts).getTime()) < 10 * 60 * 1000);
       if (dupe) return send(res, 200, { ok: true, id: dupe.id, duplicate: true });
-      const lead = { id: nextId++, ts: new Date().toISOString(), name, phone, topic, done: false };
+      const lead = { id: nextId++, ts: new Date().toISOString(), name, phone, topic, accepted: false, done: false };
       leads.push(lead);
       saveLeads();
       broadcast("lead:new", { id: lead.id, name, phone, topic, ts: lead.ts });
-      if (process.env.TG_BOT && process.env.TG_CHAT) {
-        const text = encodeURIComponent("DIXON lead #" + lead.id + ": " + name + ", " + phone + " — " + topic);
-        fetch("https://api.telegram.org/bot" + process.env.TG_BOT + "/sendMessage?chat_id=" + process.env.TG_CHAT + "&text=" + text).catch(() => {});
-      }
+      tgNotify(lead);
       return send(res, 200, { ok: true, id: lead.id });
     }
     if (req.method === "GET" && url.pathname === "/api/leads") {
@@ -256,7 +315,8 @@ const server = http.createServer(async (req, res) => {
       let body;
       try { body = JSON.parse(await readBody(req, 1024)); }
       catch (e) { return send(res, 400, { ok: false, error: "bad body" }); }
-      lead.done = !!body.done;
+      if ("accepted" in body) lead.accepted = !!body.accepted;
+      if ("done" in body) lead.done = !!body.done;
       saveLeads();
       broadcast("lead:update", { id: lead.id, done: lead.done });
       return send(res, 200, { ok: true, lead });
@@ -265,16 +325,17 @@ const server = http.createServer(async (req, res) => {
       if (!requireAdmin(req, url, res, ip)) return;
       const today = new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Moscow", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
       const byTopic = {};
-      let open = 0, todayN = 0;
+      let open = 0, accepted = 0, todayN = 0;
       for (const l of leads) {
         if (l.done) {} else open++;
+        if (l.accepted && !l.done) accepted++;
         byTopic[l.topic] = (byTopic[l.topic] || 0) + 1;
         try {
           const d = new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Moscow", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(l.ts));
           if (d === today) todayN++;
         } catch (e) {}
       }
-      return send(res, 200, { ok: true, total: leads.length, open, done: leads.length - open, today: todayN, byTopic });
+      return send(res, 200, { ok: true, total: leads.length, open, accepted, done: leads.length - open, today: todayN, byTopic });
     }
     if (req.method === "GET" && url.pathname === "/api/leads.csv") {
       if (!requireAdmin(req, url, res, ip)) return;
@@ -325,4 +386,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 if (ADMIN_TOKEN === "dixon-12345") console.log("WARNING: default ADMIN_TOKEN in use — set a strong ADMIN_TOKEN env on any public server!");
+if (process.env.TG_BOT && process.env.TG_CHAT) { tgPollLoop(); console.log("Telegram sync on"); }
 server.listen(PORT, process.env.HOST || "127.0.0.1", () => console.log("DIXON backend on http://127.0.0.1:" + PORT + " (public/, data/)"));

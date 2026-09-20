@@ -36,9 +36,10 @@ input:focus{outline:2px solid var(--lime);border-color:var(--lime)}
 .login-card button{width:100%}
 .err{color:var(--bad);font-size:14px;margin:12px 0;min-height:20px}
 /* stats */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0 14px}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:22px 0 14px}
 .stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;gap:12px;align-items:center}
-.stat .ic{font-size:22px}
+.stat .ic{flex:none}
+.stat .ic svg{width:24px;height:24px;display:block}
 .stat b{font-size:26px;display:block;line-height:1}.stat b em{font-style:normal;color:var(--lime)}
 .stat span{font-size:12px;color:var(--muted)}
 /* toolbar */
@@ -59,13 +60,18 @@ input:focus{outline:2px solid var(--lime);border-color:var(--lime)}
 table{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
 thead th{position:sticky;top:0;text-align:left;font-size:11px;letter-spacing:.08em;color:var(--muted);padding:12px;background:var(--surface2);border-bottom:1px solid var(--line);white-space:nowrap}
 td{padding:12px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle}
-tbody tr:hover td{background:rgba(255,255,255,.025)}
+tbody tr:hover td{background:rgba(91,147,255,.06)}
 tbody tr:last-child td{border-bottom:none}
 tr.done td{opacity:.45}
 tr.done td .pill{opacity:1}
 tr.fresh{box-shadow:inset 3px 0 var(--lime)}
+/* status filter */
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{background:rgba(255,255,255,.04);border:1px solid var(--line);color:#C7CEDB;font-weight:700;padding:11px 14px;font-size:13px}
+.seg button.on{border-color:var(--lime);color:var(--lime)}
 .pill{display:inline-block;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:99px;white-space:nowrap}
 .pill.new{background:rgba(61,255,136,.12);color:var(--ok);border:1px solid rgba(61,255,136,.35)}
+.pill.acc{background:rgba(91,147,255,.12);color:var(--lime);border:1px solid rgba(91,147,255,.4)}
 .pill.done{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--line)}
 td .tel{color:#fff;font-family:ui-monospace,monospace;text-decoration:none;white-space:nowrap}
 td .tel:hover{color:var(--lime)}
@@ -104,18 +110,19 @@ a.back{color:var(--lime);font-size:14px;text-decoration:none}
 
 <div id="app" class="hidden">
 <div class="stats" id="stats">
-<div class="stat"><span class="ic">📥</span><div><b><em id="stTotal">0</em></b><span>всего заявок</span></div></div>
-<div class="stat"><span class="ic">🆕</span><div><b><em id="stOpen">0</em></b><span>новые</span></div></div>
-<div class="stat"><span class="ic">✅</span><div><b><em id="stDone">0</em></b><span>завершено</span></div></div>
-<div class="stat"><span class="ic">📅</span><div><b><em id="stToday">0</em></b><span>сегодня</span></div></div>
+<div class="stat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#5B93FF" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span><div><b><em id="stTotal">0</em></b><span>всего заявок</span></div></div>
+<div class="stat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#3DFF88" stroke-width="1.8" stroke-linecap="round"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><div><b><em id="stOpen">0</em></b><span>новые</span></div></div>
+<div class="stat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#5B93FF" stroke-width="1.8" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg></span><div><b><em id="stAcc">0</em></b><span>принятые</span></div></div>
+<div class="stat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#9AA3B5" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><div><b><em id="stDone">0</em></b><span>завершено</span></div></div>
+<div class="stat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#5B93FF" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="6" width="16" height="14" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="9" y1="3" x2="9" y2="7"/><line x1="15" y1="3" x2="15" y2="7"/></svg></span><div><b><em id="stToday">0</em></b><span>сегодня</span></div></div>
 </div>
 
 <div class="toolbar" id="bar">
 <div class="grow"><input id="q" placeholder="Поиск: имя, телефон, тема" aria-label="Поиск по заявкам"></div>
+<div class="seg" id="seg"><button data-s="all" class="on">Все</button><button data-s="new">Новые</button><button data-s="accepted">Принятые</button><button data-s="done">Готово</button></div>
 <button class="ghost" id="reload">Обновить</button>
 <button class="ghost" id="ptoggle">Цены</button>
 <button class="ghost" id="csv">CSV</button>
-<button class="ghost" id="blank">Бланк</button>
 <label class="switch"><input type="checkbox" id="live" checked><span class="tr"></span>live</label>
 <span class="count" id="count"></span>
 </div>
@@ -130,7 +137,7 @@ a.back{color:var(--lime);font-size:14px;text-decoration:none}
 <tbody id="rows"></tbody>
 </table></div></div>
 
-<div class="foot"><a class="back" href="./">← На сайт</a><span id="ver">v1.9</span></div>
+<div class="foot"><a class="back" href="./">← На сайт</a><span id="ver">v1.28</span></div>
 </div>
 </div>
 
@@ -153,25 +160,29 @@ function ago(ts){try{const s=(Date.now()-new Date(ts).getTime())/1000;if(s<60)re
 let allLeads=[];
 let lastMax=0;
 const baseTitle=document.title;
+let fStatus="all";
+function statusOf(l){return l.done?"done":(l.accepted?"accepted":"new")}
+function pill(l){return l.done?'<span class="pill done">Готово</span>':(l.accepted?'<span class="pill acc">Принята</span>':'<span class="pill new">Новая</span>')}
 function render(){
   const q=$("q").value.trim().toLowerCase();
   const tb=$("rows");tb.innerHTML="";
-  const list=allLeads.filter(l=>!q||l.name.toLowerCase().includes(q)||l.phone.includes(q)||l.topic.toLowerCase().includes(q));
+  const list=allLeads.filter(l=>(fStatus==="all"||statusOf(l)===fStatus)&&(!q||l.name.toLowerCase().includes(q)||l.phone.includes(q)||l.topic.toLowerCase().includes(q)));
   $("count").textContent=list.length+" из "+allLeads.length;
   list.forEach(l=>{
     const tr=document.createElement("tr");
     if(l.done)tr.className="done";
     if(lastMax>0&&l.id>lastMax)tr.className+=(tr.className?" ":"")+"fresh";
-    const pill=l.done?'<span class="pill done">Готово</span>':'<span class="pill new">Новая</span>';
-    tr.innerHTML="<td>"+l.id+"</td><td>"+pill+'</td><td><span class="when" title="'+fmt(l.ts)+'">'+ago(l.ts)+"</span></td><td></td>"+
+    tr.innerHTML="<td>"+l.id+"</td><td>"+pill(l)+'</td><td><span class="when" title="'+fmt(l.ts)+'">'+ago(l.ts)+"</span></td><td></td>"+
       '<td><a class="tel" href="tel:'+l.phone.replace(/\D/g,"")+'">'+l.phone+"</a></td><td></td>"+
       '<td><span class="acts"></span></td>';
     tr.children[3].textContent=l.name;
     tr.children[5].textContent=l.topic;
     const box=tr.querySelector(".acts");
     const b=document.createElement("button");
-    b.className="ghost sm";b.textContent=l.done?"Вернуть":"Готово";
-    b.onclick=async()=>{await api("api/leads/"+l.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({done:!l.done})});load()};
+    b.className="ghost sm";
+    if(!l.done&&!l.accepted){b.textContent="Принять";b.onclick=async()=>{await api("api/leads/"+l.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({accepted:true})});load()}}
+    else if(!l.done){b.textContent="Готово";b.onclick=async()=>{await api("api/leads/"+l.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({done:true})});load()}}
+    else{b.textContent="Вернуть";b.onclick=async()=>{await api("api/leads/"+l.id,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({done:false,accepted:false})});load()}}
     const d=document.createElement("button");
     d.className="danger";d.textContent="✕";d.title="Удалить";
     d.onclick=async()=>{if(confirm("Удалить заявку №"+l.id+"?")){await api("api/leads/"+l.id,{method:"DELETE"});load()}};
@@ -179,6 +190,7 @@ function render(){
     tb.appendChild(tr);
   });
 }
+document.querySelectorAll("#seg button").forEach(x=>x.onclick=()=>{document.querySelectorAll("#seg button").forEach(y=>y.classList.remove("on"));x.classList.add("on");fStatus=x.dataset.s;render()});
 async function load(){
   $("err").textContent="";
   try{
@@ -190,7 +202,7 @@ async function load(){
     try{
       const s=await api("api/stats");
       $("stTotal").textContent=s.total;$("stOpen").textContent=s.open;
-      $("stDone").textContent=s.done;$("stToday").textContent=s.today;
+      $("stAcc").textContent=s.accepted||0;$("stDone").textContent=s.done;$("stToday").textContent=s.today;
       document.title=s.open>0?"("+s.open+") "+baseTitle:baseTitle;
     }catch(e){}
   }catch(e){setConn(false);$("err").textContent="Ошибка: "+e.message}
@@ -207,7 +219,6 @@ $("logout").onclick=()=>location.reload();
 $("reload").onclick=load;
 $("q").addEventListener("input",render);
 $("csv").onclick=async()=>{try{const r=await fetch("api/leads.csv",{headers:{"X-Admin-Token":token}});if(!r.ok)throw new Error();const b=await r.blob();const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="dixon-leads.csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}catch(e){$("err").textContent="Ошибка: не скачалось"}};
-$("blank").onclick=()=>{open("./garantiya.html","_blank")};
 $("ptoggle").onclick=async()=>{
   const p=$("pedit");
   $("ptoggle").classList.toggle("on",p.classList.contains("hidden"));
