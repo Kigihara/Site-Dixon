@@ -3,7 +3,7 @@
 Сайт + бэкенд сервисного центра Samsung (Чебоксары, Калинина 91к1).
 Локально: `start.bat` → http://127.0.0.1:8099/ · Админка: `/admin.html` (токен `ADMIN_TOKEN`).
 Публично: https://kigihara.github.io/Site-Dixon/ (статика, GitHub Pages, бесплатно).
-Репозиторий: https://github.com/Kigihara/Site-Dixon · Текущая версия: **v1.10**.
+Репозиторий: https://github.com/Kigihara/Site-Dixon · Текущая версия: **v1.11**.
 
 ## 1. Куда идём
 
@@ -102,3 +102,4 @@
 - **v1.8** — синий ребренд, экран телефона, чекбоксы, шапка.
 - **v1.9** — админка 2.0: пульт с онлайном, свитч live, пилюли, tel-ссылки, выход.
 - **v1.10** — шапка: статус только с 1700px, запрет переносов в навигации.
+- **v1.11** — визуал C (гибрид): SVG-иконки везде вместо эмодзи, aurora hero, glass lab с tilt, premium hover bento, stagger reveals, опциональные CDN-шрифты с локальным фолбэком, CSP allowlist fonts.googleapis/gstatic.

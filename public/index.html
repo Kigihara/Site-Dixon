@@ -16,6 +16,8 @@
 <link rel="preload" href="./fonts/unbounded-cyrillic-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="./fonts/manrope-cyrillic-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="./fonts/fonts.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <style>
 :root{
   --bg:#0B0E13; --surface:#121722; --surface2:#171E2B; --line:rgba(255,255,255,.11);
@@ -193,6 +195,30 @@ section.block{scroll-margin-top:70px}
 .quick{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px;font-family:var(--font-m);font-size:12px;color:var(--muted)}
 .quick button{background:rgba(255,255,255,.05);border:1px solid var(--line);color:#E7EBF2;border-radius:999px;padding:8px 14px;font-family:var(--font-m);font-size:12.5px;cursor:pointer}
 .quick button:hover{border-color:var(--lime);color:var(--lime)}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.icon svg{width:22px;height:22px}
+.card:hover .icon{background:rgba(91,147,255,.22)}
+.c-line svg{width:18px;height:18px;flex:none;color:var(--lime);margin-top:3px}
+.search svg{width:16px;height:16px;flex:none}
+.quiz-card h4 svg{width:18px;height:18px;vertical-align:-3px;color:var(--lime)}
+/* v1.11 hybrid: aurora hero + glass lab + premium hovers */
+.hero::before{content:"";position:absolute;inset:-120px -80px auto;height:520px;pointer-events:none;background:radial-gradient(600px 280px at 12% 20%,rgba(91,147,255,.14),transparent 60%),radial-gradient(500px 260px at 85% 10%,rgba(61,255,136,.07),transparent 60%)}
+.lab{backdrop-filter:blur(14px);box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .35s,box-shadow .35s}
+.lab::before{content:"";position:absolute;inset:-40% -20% auto;height:70%;pointer-events:none;background:radial-gradient(closest-side,rgba(91,147,255,.16),transparent)}
+.lab.tilt{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.card{box-shadow:0 0 0 rgba(0,0,0,0)}
+.card:hover{transform:translateY(-6px);border-color:rgba(91,147,255,.55);box-shadow:0 24px 60px rgba(0,0,0,.4),0 0 0 1px rgba(91,147,255,.15)}
+.card:hover .icon{transform:scale(1.08) rotate(-3deg)}
+.card .icon{transition:transform .3s cubic-bezier(.16,1,.3,1),background .3s}
+.bento .card:nth-child(2){transition-delay:.05s}
+.bento .card:nth-child(3){transition-delay:.1s}
+.bento .card:nth-child(4){transition-delay:.15s}
+.bento .card:nth-child(5){transition-delay:.2s}
+.adv-item .icon svg{width:22px;height:22px}
+.rev-card{transition:transform .3s,border-color .3s}
+.rev-card:hover{transform:translateY(-4px);border-color:rgba(91,147,255,.4)}
+section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
+@media (prefers-reduced-motion: reduce){.hero::before,.lab::before{display:none}}
 /* faq */
 .faq{display:grid;gap:10px;max-width:860px}
 .faq-item{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
@@ -308,6 +334,22 @@ section.block{scroll-margin-top:70px}
 </style>
 </head>
 <body>
+<svg class="sprite" aria-hidden="true"><defs>
+<symbol id="i-screen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><line x1="10.5" y1="18.5" x2="13.5" y2="18.5"/></symbol>
+<symbol id="i-batt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2.5" y="8" width="16" height="8" rx="2"/><line x1="21.5" y1="10.5" x2="21.5" y2="13.5"/><rect x="5.5" y="10.5" width="6" height="3" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6 9.5V20h12V9.5"/></symbol>
+<symbol id="i-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 10a12 12 0 0 1 16 0"/><path d="M7 13.5a7 7 0 0 1 10 0"/><circle cx="12" cy="17.5" r="1.4" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v5M15 3v5"/><path d="M7 8h10v5a5 5 0 0 1-10 0z"/><line x1="12" y1="18" x2="12" y2="21"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+<symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="18" height="13" rx="2.5"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="17" cy="14.5" r="1.2" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="10" y="10" width="4" height="4"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+<symbol id="i-medal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L7.5 21l4.5-2.5L16.5 21 15 13.5"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-6.5-5.5-6.5-10a6.5 6.5 0 0 1 13 0c0 4.5-6.5 10-6.5 10z"/><circle cx="12" cy="11" r="2.3"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></symbol>
+</defs></svg>
 <div class="grain"></div>
 <div class="progress" id="progress"></div>
 <div id="loader"><div class="num" id="loadNum">0%</div><div class="bar"><i id="loadBar"></i></div><p>DIXON SERVICE • DIAGNOSTICS</p></div>
@@ -364,11 +406,11 @@ section.block{scroll-margin-top:70px}
 <section class="block wrap" id="fix">
 <div class="sec-head reveal"><h2>Что ломается — то и чиним. Без воды.</h2><p>Шесть направлений, по которым у нас всегда есть запчасти и оснастка. Выберите свою проблему — дальше подскажем цену.</p></div>
 <div class="bento">
-<div class="card big reveal"><span class="tag">ХИТ • 41% ОБРАЩЕНИЙ</span><div class="icon">📱</div><h3>Замена и ремонт экрана</h3><ul><li>разбилось стекло / трещины</li><li>не работает сенсор или часть экрана</li><li>нет подсветки</li><li>не гаснет при разговоре</li></ul><p class="mono fine">OLED с рамой и без • калибровка • от 3 500 ₽</p><div class="pop"><div>A15 / A25 <b>от 5 500 ₽</b></div><div>S24 / S24 Ultra <b>от 13 500 ₽</b></div><div>Z Fold 5 <b>от 53 500 ₽</b></div><a href="#price">Подобрать по модели ↓</a></div></div>
-<div class="card reveal"><div class="icon">🔋</div><h3>Аккумулятор</h3><ul><li>быстро садится</li><li>греется / не заряжается</li><li>плохой контакт</li></ul></div>
-<div class="card reveal"><div class="icon">🏠</div><h3>Корпус</h3><ul><li>задняя крышка треснула</li><li>царапины / разбит полностью</li></ul></div>
-<div class="card reveal"><div class="icon">📶</div><h3>Общие проблемы</h3><ul><li>не работает Wi-Fi / SIM</li><li>попала влага</li><li>динамик, камера</li><li>кнопки Home, громкость, включение</li></ul></div>
-<div class="card reveal"><div class="icon">🔌</div><h3>Разъёмы</h3><ul><li>не заряжается</li><li>наушники / ПК не видит</li></ul></div>
+<div class="card big reveal"><span class="tag">ХИТ • 41% ОБРАЩЕНИЙ</span><div class="icon"><svg><use href="#i-screen"/></svg></div><h3>Замена и ремонт экрана</h3><ul><li>разбилось стекло / трещины</li><li>не работает сенсор или часть экрана</li><li>нет подсветки</li><li>не гаснет при разговоре</li></ul><p class="mono fine">OLED с рамой и без • калибровка • от 3 500 ₽</p><div class="pop"><div>A15 / A25 <b>от 5 500 ₽</b></div><div>S24 / S24 Ultra <b>от 13 500 ₽</b></div><div>Z Fold 5 <b>от 53 500 ₽</b></div><a href="#price">Подобрать по модели ↓</a></div></div>
+<div class="card reveal"><div class="icon"><svg><use href="#i-batt"/></svg></div><h3>Аккумулятор</h3><ul><li>быстро садится</li><li>греется / не заряжается</li><li>плохой контакт</li></ul></div>
+<div class="card reveal"><div class="icon"><svg><use href="#i-home"/></svg></div><h3>Корпус</h3><ul><li>задняя крышка треснула</li><li>царапины / разбит полностью</li></ul></div>
+<div class="card reveal"><div class="icon"><svg><use href="#i-wifi"/></svg></div><h3>Общие проблемы</h3><ul><li>не работает Wi-Fi / SIM</li><li>попала влага</li><li>динамик, камера</li><li>кнопки Home, громкость, включение</li></ul></div>
+<div class="card reveal"><div class="icon"><svg><use href="#i-plug"/></svg></div><h3>Разъёмы</h3><ul><li>не заряжается</li><li>наушники / ПК не видит</li></ul></div>
 
 </div>
 </section>
@@ -376,10 +418,10 @@ section.block{scroll-margin-top:70px}
 <section class="block wrap" id="why">
 <div class="sec-head reveal"><h2>Почему Чебоксары несут Samsung именно нам</h2></div>
 <div class="adv reveal">
-<div class="adv-item"><div class="icon">⏱️</div><div><h3>Экономия времени и нервов</h3><p>Отлаженный процесс, логистика и склад деталей: ремонт любой сложности в кратчайший срок.</p></div></div>
-<div class="adv-item"><div class="icon">💰</div><div><h3>Справедливые цены</h3><p>Привлекательные цены на услуги и оригинальные запчасти. Скидки постоянным клиентам.</p></div></div>
-<div class="adv-item"><div class="icon">🛠️</div><div><h3>Профессиональные инженеры</h3><p>Сертификация у производителей, постоянное обучение, фирменное оборудование для ремонта.</p></div></div>
-<div class="adv-item"><div class="icon">🏅</div><div><h3>Официальная гарантия</h3><p>Только оригинальные запчасти и технология производителя. Гарантия на работы и комплектующие.</p></div></div>
+<div class="adv-item"><div class="icon"><svg><use href="#i-clock"/></svg></div><div><h3>Экономия времени и нервов</h3><p>Отлаженный процесс, логистика и склад деталей: ремонт любой сложности в кратчайший срок.</p></div></div>
+<div class="adv-item"><div class="icon"><svg><use href="#i-card"/></svg></div><div><h3>Справедливые цены</h3><p>Привлекательные цены на услуги и оригинальные запчасти. Скидки постоянным клиентам.</p></div></div>
+<div class="adv-item"><div class="icon"><svg><use href="#i-cpu"/></svg></div><div><h3>Профессиональные инженеры</h3><p>Сертификация у производителей, постоянное обучение, фирменное оборудование для ремонта.</p></div></div>
+<div class="adv-item"><div class="icon"><svg><use href="#i-medal"/></svg></div><div><h3>Официальная гарантия</h3><p>Только оригинальные запчасти и технология производителя. Гарантия на работы и комплектующие.</p></div></div>
 </div>
 </section>
 
@@ -389,7 +431,7 @@ section.block{scroll-margin-top:70px}
 <h2>Честные цены с работой. Найдите свою модель.</h2>
 <p class="psub">Стоимость указана на чёрный цвет, на другие цвета может отличаться. Точную цену и наличие уточняйте по телефону <b>8 (8352) 36-42-02</b>.</p>
 <div class="price-tools">
-<label class="search"><span aria-hidden="true">🔍</span> <input id="q" placeholder="Например: S24, A55, Z Fold…" aria-label="Поиск модели"></label>
+<label class="search"><svg aria-hidden="true"><use href="#i-search"/></svg> <input id="q" placeholder="Например: S24, A55, Z Fold…" aria-label="Поиск модели"></label>
 <div class="chips"><button class="chipbtn active" data-f="all">Все</button><button class="chipbtn" data-f="A">Galaxy A / M</button><button class="chipbtn" data-f="S">Galaxy S</button><button class="chipbtn" data-f="Z">Fold / Flip</button></div>
 </div>
 <div class="tscroll">
@@ -411,8 +453,8 @@ section.block{scroll-margin-top:70px}
 </div>
 <p class="note">* для Fold / Flip — замена двух АКБ. Полный прайс на 130+ моделей — у администратора. Это лишь популярные позиции с dixon-sc.ru.</p>
 <div class="quiz">
-<div class="quiz-card"><h4>⚡ Экспресс-оценка: что случилось?</h4><select id="sym" aria-label="Что случилось"><option value="screen">Разбит экран / не работает сенсор</option><option value="bat">Быстро садится / не заряжается</option><option value="back">Треснула задняя крышка</option><option value="water">Попала влага / не видит SIM</option></select><button id="symBtn">Показать ориентир →</button><p id="symOut" class="mono"></p></div>
-<div class="quiz-card quiz-alt"><h4>📞 Не нашли модель? Пришлите фото поломки</h4><p>Ответим за 10 минут в рабочее время и назовём точную цену с работой.</p><a class="btn btn-lime" href="tel:+78352364202">Позвонить сейчас</a></div>
+<div class="quiz-card"><h4><svg aria-hidden="true"><use href="#i-zap"/></svg> Экспресс-оценка: что случилось?</h4><select id="sym" aria-label="Что случилось"><option value="screen">Разбит экран / не работает сенсор</option><option value="bat">Быстро садится / не заряжается</option><option value="back">Треснула задняя крышка</option><option value="water">Попала влага / не видит SIM</option></select><button id="symBtn">Показать ориентир →</button><p id="symOut" class="mono"></p></div>
+<div class="quiz-card quiz-alt"><h4><svg aria-hidden="true" width="18" height="18" style="vertical-align:-3px"><use href="#i-phone"/></svg> Не нашли модель? Пришлите фото поломки</h4><p>Ответим за 10 минут в рабочее время и назовём точную цену с работой.</p><a class="btn btn-lime" href="tel:+78352364202">Позвонить сейчас</a></div>
 </div>
 </div>
 </section>
@@ -462,9 +504,9 @@ section.block{scroll-margin-top:70px}
 <div class="contact-grid">
 
 <div class="c-card reveal"><h3>DIXON • Чебоксары</h3>
-<div class="c-line">📍<div>ул. Калинина, 91к1<small>вход с торца, вывеска DIXON • парковка во дворе</small></div></div>
-<div class="c-line">📞<div><a class="tel" href="tel:+78352364202">8 (8352) 36-42-02</a><small>ежедневно 9:00–20:00 • <span id="msk">--:--</span> МСК</small></div></div>
-<div class="c-line">✉️<div><a href="mailto:manager@dixon-sc.ru">manager@dixon-sc.ru</a><small>фото поломки — сразу оценим</small></div></div>
+<div class="c-line"><svg aria-hidden="true"><use href="#i-pin"/></svg><div>ул. Калинина, 91к1<small>вход с торца, вывеска DIXON • парковка во дворе</small></div></div>
+<div class="c-line"><svg aria-hidden="true"><use href="#i-phone"/></svg><div><a class="tel" href="tel:+78352364202">8 (8352) 36-42-02</a><small>ежедневно 9:00–20:00 • <span id="msk">--:--</span> МСК</small></div></div>
+<div class="c-line"><svg aria-hidden="true"><use href="#i-mail"/></svg><div><a href="mailto:manager@dixon-sc.ru">manager@dixon-sc.ru</a><small>фото поломки — сразу оценим</small></div></div>
 <div class="route-btns"><a data-map="Чебоксары, улица Калинина, 91к1" href="#">Яндекс Карты →</a><a data-gis="Чебоксары, Калинина 91к1" href="#">Маршрут в 2ГИС →</a></div>
 <div class="hours" id="hoursLine">● сегодня принимаем до 19:30</div>
 </div>
@@ -545,6 +587,9 @@ if(ph)ph.addEventListener('input',()=>{let d=ph.value.replace(/\D/g,'');if(d.sta
 // back to top
 const tt=document.getElementById('toTop');
 if(tt){addEventListener('scroll',()=>tt.classList.toggle('show',scrollY>900),{passive:true});tt.onclick=()=>scrollTo({top:0,behavior:'smooth'})}
+// v1.11 hybrid progressive: CDN fonts (optional) + lab tilt (zero-dep fallback = local fonts, no tilt)
+(function(){try{if(document.fonts&&document.fonts.ready){document.fonts.ready.then(()=>document.documentElement.classList.add('fonts-ok')).catch(()=>{})}var l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Unbounded:wght@500;700;800&display=swap';l.onerror=()=>l.remove();document.head.appendChild(l)}catch(e){}})();
+(function(){try{if(!matchMedia('(pointer:fine)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches)return;var lab=document.querySelector('.lab');if(!lab)return;var raf=null;lab.addEventListener('mousemove',e=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=null;var r=lab.getBoundingClientRect();var x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;lab.style.setProperty('--ry',(x*6)+'deg');lab.style.setProperty('--rx',(-y*6)+'deg');lab.classList.add('tilt')})});lab.addEventListener('mouseleave',()=>{lab.classList.remove('tilt');lab.style.setProperty('--rx','0deg');lab.style.setProperty('--ry','0deg')})}catch(e){}})();
 // GSAP animations if available + motion allowed
 setTimeout(()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>el.classList.add('in')),2500);
 

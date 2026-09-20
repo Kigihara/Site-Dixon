@@ -115,7 +115,7 @@ function pageCspHashes() {
   return { scripts, styles };
 }
 const _cspHashes = pageCspHashes();
-const CSP = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' data:; style-src 'self' " + _cspHashes.styles.join(" ") + "; script-src 'self' " + _cspHashes.scripts.join(" ");
+const CSP = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com " + _cspHashes.styles.join(" ") + "; script-src 'self' " + _cspHashes.scripts.join(" ");
 
 // ---- live queue (in-memory, slow random walk) ----
 const status = { queue: 6, waitMin: 130 };
