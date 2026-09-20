@@ -295,6 +295,9 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 .calc-out{background:transparent;border:none;border-radius:0;padding:10px 4px;font-size:15px}
 .calc-out b{color:var(--lime);font-family:var(--font-m);font-size:28px}
 .calc-out .go{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1.5px}
+/* v1.24 empty state: intentional muted hint, vertically centered */
+.calc-out.is-empty{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:14.5px;min-height:76px}
+.calc-out.is-empty::before{content:"—";font-family:var(--font-m);font-size:36px;line-height:1;color:rgba(255,255,255,.22)}
 .calc-out .go{display:inline-block;margin-top:8px;color:var(--lime);font-weight:800;font-size:13.5px;cursor:pointer}
 /* CSP-safe replacements for former inline styles */
 .d2{animation-delay:-1.5s}
@@ -533,7 +536,7 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <div class="calc-grid reveal">
 <label class="calc-f"><span>МОДЕЛЬ</span><select id="calcModel" aria-label="Модель телефона"><option value="">Модель…</option></select></label>
 <label class="calc-f"><span>РАБОТА</span><select id="calcJob" aria-label="Что чиним"><option value="display">Дисплей с работой</option><option value="battery">Аккумулятор с работой</option><option value="back">Задняя крышка с работой</option></select></label>
-<div class="calc-out" id="calcOut">Выберите модель — покажем цену с работой.</div>
+<div class="calc-out is-empty" id="calcOut">Выберите модель — покажем цену с работой.</div>
 </div>
 </section>
 
@@ -635,7 +638,7 @@ if(tf)tf.addEventListener('submit',async e=>{e.preventDefault();const o=document
 const fmt=n=>Number(n).toLocaleString('ru-RU')+' ₽';
 list.forEach((p,i)=>{const op=document.createElement('option');op.value=i;op.textContent=p.model;m.appendChild(op)});
 const topics={display:'Разбит экран',battery:'Аккумулятор',back:'Корпус / крышка'};
-function upd(){if(m.value===''){o.textContent='Выберите модель — покажем цену с работой.';return}const p=list[+m.value],k=j.value;let t=''+p.model+' — '+j.options[j.selectedIndex].text+': <b>'+fmt(p[k])+'</b>';if(p.note)t+='<br><span class="mini">Fold/Flip: пара АКБ меняется сразу.</span>';t+='<br><span class="go" id="calcGo">Оставить заявку на этот ремонт →</span>';o.innerHTML=t;document.getElementById('calcGo').onclick=()=>{const s=document.getElementById('leadTopic');if(s)s.value=topics[k];document.querySelector('#contacts').scrollIntoView({behavior:'smooth'})}}
+function upd(){o.classList.toggle('is-empty',m.value==='');if(m.value===''){o.textContent='Выберите модель — покажем цену с работой.';return}const p=list[+m.value],k=j.value;let t=''+p.model+' — '+j.options[j.selectedIndex].text+': <b>'+fmt(p[k])+'</b>';if(p.note)t+='<br><span class="mini">Fold/Flip: пара АКБ меняется сразу.</span>';t+='<br><span class="go" id="calcGo">Оставить заявку на этот ремонт →</span>';o.innerHTML=t;document.getElementById('calcGo').onclick=()=>{const s=document.getElementById('leadTopic');if(s)s.value=topics[k];document.querySelector('#contacts').scrollIntoView({behavior:'smooth'})}}
 m.onchange=upd;j.onchange=upd;})();
 // price table from backend (static rows stay as fallback for no-JS/SEO)
 (async function(){let d=null;try{const r=await fetch('api/prices');d=await r.json()}catch(e){return}if(!d||!d.ok||!Array.isArray(d.prices))return;const tb=document.querySelector('#ptable tbody');if(!tb)return;const fmt=n=>Number(n).toLocaleString('ru-RU')+' ₽';tb.innerHTML='';d.prices.forEach(p=>{const tr=document.createElement('tr');tr.dataset.g=p.group;[p.model,fmt(p.display),fmt(p.battery),fmt(p.back)+(p.note?' *':'')].forEach((t,i)=>{const td=document.createElement('td');if(i>0)td.className='num';td.textContent=t;tr.appendChild(td)});tb.appendChild(tr)});tb.classList.add('fresh');if(typeof apply==='function')apply()})();
