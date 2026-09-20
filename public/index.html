@@ -225,20 +225,21 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 @media (prefers-reduced-motion: reduce){.hero::before,.lab::before{display:none}}
 /* v1.18 hero 2.0: fullscreen + living mesh + display type + scroll hint */
 @media(min-width:1151px) and (min-height:700px){
- .hero{min-height:calc(100svh - 68px);display:flex;flex-direction:column;justify-content:center}
- h1{font-size:clamp(40px,5.6vw,88px);letter-spacing:-.03em}
+ .hero{padding:44px 0 26px}
+ h1{font-size:clamp(38px,4.6vw,76px);letter-spacing:-.03em;margin:18px 0 14px}
  h1 .lime{background:linear-gradient(100deg,#8DB4FF,#5B93FF 45%,#3DFF88 110%);-webkit-background-clip:text;background-clip:text;color:transparent}
+ .hero-cta{margin:20px 0}
+ .lead{font-size:16px}
+ .lab{min-height:0;padding:18px}
+ .screen{min-height:320px}
+ .phone-mock{margin:12px auto 6px}
+ .hero-stats-wide{margin-top:16px}
+ .stat{padding:12px 14px}
 }
 .hero::after{content:"";position:absolute;inset:auto -10% -180px;height:420px;pointer-events:none;background:radial-gradient(560px 240px at 70% 100%,rgba(91,147,255,.12),transparent 60%),radial-gradient(420px 200px at 25% 100%,rgba(61,255,136,.06),transparent 60%);animation:mesh 14s ease-in-out infinite alternate}
 .hero::before{animation:mesh 18s ease-in-out infinite alternate-reverse}
 @keyframes mesh{from{transform:translate3d(-2%,0,0) scale(1)}to{transform:translate3d(2%,-3%,0) scale(1.06)}}
-.scroll-hint{display:none}
-@media(min-width:1151px) and (min-height:700px){
- .scroll-hint{display:flex;align-items:center;gap:10px;justify-content:center;margin:26px 0 6px;font-family:var(--font-m);font-size:11.5px;letter-spacing:.2em;color:var(--muted2)}
- .scroll-hint i{width:1px;height:34px;background:linear-gradient(var(--lime),transparent);display:block;animation:hint 1.8s ease-in-out infinite}
-}
-@keyframes hint{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-@media print{.hero{min-height:auto!important}.hero::after,.scroll-hint{display:none!important}}
+@media print{.hero::after{display:none!important}}
 /* faq */
 .faq{display:grid;gap:10px;max-width:860px}
 .faq-item{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
@@ -448,7 +449,6 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <div class="stat"><b><em data-count="40">0</em> мин</b><span>замена АКБ и разъёма</span></div>
 <div class="stat"><b><em data-count="98">0</em>%</b><span>клиентов рекомендуют нас</span></div>
 </div>
-<div class="scroll-hint" aria-hidden="true">ЛИСТАЙТЕ<i></i></div>
 </div>
 
 <div class="marquee"><div class="marquee-track" id="marquee"></div></div>
