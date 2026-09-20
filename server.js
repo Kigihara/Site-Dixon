@@ -117,16 +117,6 @@ function pageCspHashes() {
 const _cspHashes = pageCspHashes();
 const CSP = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com " + _cspHashes.styles.join(" ") + "; script-src 'self' " + _cspHashes.scripts.join(" ");
 
-// ---- live queue (in-memory, slow random walk) ----
-const status = { queue: 6, waitMin: 130 };
-function driftStatus() {
-  status.queue = Math.max(2, Math.min(11, status.queue + (Math.random() > 0.5 ? 1 : -1)));
-  status.waitMin = Math.max(40, Math.min(300, status.waitMin + Math.round((Math.random() - 0.5) * 20)));
-}
-function moscowHour() {
-  return Number(new Intl.DateTimeFormat("ru-RU", { hour: "numeric", hour12: false, timeZone: "Europe/Moscow" }).format(new Date()));
-}
-
 // ---- realtime: server-sent events for admin ----
 const sseClients = new Set();
 function broadcast(type, data) {
@@ -225,11 +215,6 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === "GET" && url.pathname === "/api/health") {
       return send(res, 200, { ok: true, time: new Date().toISOString(), uptimeSec: Math.round((Date.now() - STARTED_AT) / 1000), leads: leads.length });
-    }
-    if (req.method === "GET" && url.pathname === "/api/status") {
-      driftStatus();
-      const h = moscowHour();
-      return send(res, 200, { ok: true, queue: status.queue, waitMin: status.waitMin, open: h >= 9 && h < 20 });
     }
     if (req.method === "GET" && url.pathname === "/api/prices") {
       return send(res, 200, { ok: true, updated: PRICES_UPDATED, prices: PRICES });

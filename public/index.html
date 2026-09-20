@@ -79,8 +79,6 @@ h1 .lime{color:var(--lime)}
 .lead{max-width:54ch;color:#B9C1D1;font-size:17px}
 .lead b{color:#fff}
 .hero-cta{display:flex;gap:12px;margin:26px 0;flex-wrap:wrap}
-.queue{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-family:var(--font-m);font-size:12.5px;color:#C7CEDB}
-.queue strong{color:var(--lime)}
 .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
 .hero-stats-wide{margin-top:28px}
 .stat{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:14px;padding:14px}
@@ -451,13 +449,12 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <a class="btn btn-ghost" href="tel:+78352364202" data-magnet>Позвонить: 36-42-02</a>
 </div>
 <div class="quick"><span>Часто ищут:</span><button data-q="S24">S24</button><button data-q="A55">A55</button><button data-q="Z Fold">Z Fold</button><button data-q="Flip">Flip</button></div>
-<div class="queue"><span>● очередь сейчас:</span><strong id="queueNum">6 устройств</strong><span>• среднее ожидание</span><strong>~2 ч 10 мин</strong></div>
 
 </div>
 
 <div class="lab reveal in">
 <div class="lab-top"><span>LAB-01 // ДИАГНОСТИКА</span><span class="live">● LIVE</span></div>
-<div class="phone-mock"><div class="screen"><div class="crack"></div><div class="diag" id="term">$ dixon --diagnose S24<br>> display … <span class="warn">FAIL</span><br>> battery … <span class="ok">89%</span><br>> moisture … <span class="ok">none</span><br>> board … <span class="ok">ok</span><br><span id="termLine">> ordering OLED…</span><span class="ok"> ▊</span></div><div class="diagstat"><div>OLED • оригинал — на складе</div><div class="pbar"><i class="w78"></i></div><div>Калибровка • очередь на сегодня</div><div class="pbar"><i class="w34"></i></div><div>Выдача • сегодня без ожидания</div><div class="pbar"><i class="w55"></i></div></div></div></div>
+<div class="phone-mock"><div class="screen"><div class="crack"></div><div class="diag" id="term">$ dixon --diagnose S24<br>> display … <span class="warn">FAIL</span><br>> battery … <span class="ok">89%</span><br>> moisture … <span class="ok">none</span><br>> board … <span class="ok">ok</span><br><span id="termLine">> ordering OLED…</span><span class="ok"> ▊</span></div><div class="diagstat"><div>OLED • оригинал — на складе</div><div class="pbar"><i class="w78"></i></div><div>Калибровка • в день обращения</div><div class="pbar"><i class="w34"></i></div><div>Выдача • сегодня без ожидания</div><div class="pbar"><i class="w55"></i></div></div></div></div>
 <div class="chips-row"><span class="chip">Дисплей S24 Ultra — <b>от 13 500 ₽</b></span><span class="chip">АКБ с работой — <b>от 4 200 ₽</b></span><span class="chip">Гарантия — <b>до 12 месяцев</b></span></div>
 <div class="lab-bottom">
 <div class="meter">Оригинал OLED<div class="bar"><i></i></div></div>
@@ -618,10 +615,7 @@ document.querySelectorAll('.chipbtn').forEach(b=>b.onclick=()=>{document.querySe
 // quiz
 const out=document.getElementById('symOut');
 document.getElementById('symBtn').onclick=()=>{const v=document.getElementById('sym').value;const m={screen:'Экран: от 3 500 ₽ (A) / 13–21 тыс. ₽ (S) — точно по модели выше.',bat:'АКБ с работой: 4 200–7 400 ₽, Fold/Flip — 10 500 ₽ за пару.',back:'Крышка с работой: 2 000–7 500 ₽. Цвет уточняйте.',water:'Влага/SIM/Wi-Fi: от 1 500 ₽ после бесплатной диагностики.'};out.textContent='→ '+m[v]};
-// queue + clock
-let qq=6;setInterval(()=>{qq=Math.max(2,Math.min(11,qq+(Math.random()>.5?1:-1)));document.getElementById('queueNum').textContent=qq+' устройств'},5000);
-async function syncStatus(){try{const r=await fetch('api/status');if(!r.ok)return;const s=await r.json();if(typeof s.queue==='number'){qq=s.queue;document.getElementById('queueNum').textContent=qq+' устройств'}}catch(e){}}
-setInterval(syncStatus,20000);syncStatus();
+// clock
 if(location.protocol==='file:'){document.getElementById('formOk').textContent='Форма заработает после запуска сервера: откройте start.bat в папке сайта.';}
 function tick(){try{document.getElementById('msk').textContent=new Date().toLocaleTimeString('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit'})}catch(e){}const h=new Date().getHours();document.getElementById('openState').textContent=(h>=9&&h<20)?'Открыто • до 20:00':'Закрыто • с 9:00'}setInterval(tick,30000);tick();
 // term typing
