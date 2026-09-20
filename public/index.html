@@ -169,8 +169,16 @@ tr:hover td{background:#E9F1FF}
 .quiz-card button:active{transform:scale(.98)}
 /* process */
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+/* v1.33 steps timeline: badge numbers on a connecting line */
+.steps{position:relative}
+@media(min-width:1151px){
+ .steps::before{content:"";position:absolute;top:50px;left:48px;right:48px;height:2px;background:linear-gradient(90deg,transparent,rgba(91,147,255,.45) 12%,rgba(91,147,255,.45) 88%,transparent)}
+}
 .step{border:1px solid var(--line);border-radius:18px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.05),transparent)}
-.step .n{font-family:var(--font-d);font-size:40px;color:transparent;-webkit-text-stroke:1.2px var(--lime)}
+.step .n{font-family:var(--font-d);font-size:20px;font-weight:800;width:56px;height:56px;border-radius:50%;background:var(--lime);color:var(--lime-ink);display:grid;place-items:center;position:relative;z-index:1;margin-bottom:14px;box-shadow:0 0 0 6px rgba(91,147,255,.12)}
+@media(max-width:640px){
+ .steps::before{content:"";position:absolute;top:48px;bottom:48px;left:50px;width:2px;background:linear-gradient(180deg,transparent,rgba(91,147,255,.45) 12%,rgba(91,147,255,.45) 88%,transparent)}
+}
 .step h3{margin:10px 0 6px;font-size:16px}
 .step p{color:var(--muted);font-size:14px}
 .step time{font-family:var(--font-m);font-size:11.5px;color:var(--lime)}
