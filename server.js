@@ -9,7 +9,15 @@ const path = require("path");
 const crypto = require("crypto");
 
 const PORT = Number(process.env.PORT || 8099);
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "dixon-12345";
+const ADMIN_TOKEN = (process.env.ADMIN_TOKEN || "dixon-12345").trim();
+const CORS_LIST = (process.env.CORS_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
+function applyCors(req, res) {
+  const o = req.headers.origin;
+  if (o && (CORS_LIST.includes("*") || CORS_LIST.includes(o))) {
+    res.setHeader("Access-Control-Allow-Origin", o);
+    res.setHeader("Vary", "Origin");
+  }
+}
 const ROOT = path.join(__dirname, "public");
 const DATA = process.env.DATA_DIR || path.join(__dirname, "data");
 const LEADS_FILE = path.join(DATA, "leads.json");
@@ -19,8 +27,9 @@ const TOPICS = ["Разбит экран", "Аккумулятор", "Корпу
 
 // Mirror of the price table on the site (rubles, work included).
 // Bump PRICES_UPDATED whenever prices change — the site shows it.
-const PRICES_UPDATED = "2026-09-20";
-const PRICES = [
+const PRICES_FILE = path.join(DATA, "prices.json");
+const PRICES_DEFAULT_UPDATED = "2026-09-20";
+let PRICES = [
   { model: "A15 SM-A155F", group: "A", display: 5500, battery: 4200, back: 2100 },
   { model: "A25 SM-A256E", group: "A", display: 6800, battery: 4400, back: 2200 },
   { model: "A35 SM-A356E", group: "A", display: 8200, battery: 4600, back: 2600 },
@@ -35,6 +44,26 @@ const PRICES = [
   { model: "Z Fold 5 SM-F946B", group: "Z", display: 53500, battery: 10500, back: 6000, note: "battery = pair" },
   { model: "Z Fold 6 SM-F956B", group: "Z", display: 55000, battery: 10500, back: 6200, note: "battery = pair" }
 ];
+let PRICES_UPDATED = PRICES_DEFAULT_UPDATED;
+try {
+  const custom = JSON.parse(fs.readFileSync(PRICES_FILE, "utf8"));
+  if (custom && Array.isArray(custom.prices) && custom.prices.length > 0) {
+    PRICES = custom.prices;
+    if (custom.updated) PRICES_UPDATED = custom.updated;
+  }
+} catch (e) {}
+function savePrices() {
+  fs.writeFileSync(PRICES_FILE, JSON.stringify({ updated: PRICES_UPDATED, prices: PRICES }, null, 2));
+}
+function todayMSK() {
+  return new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Moscow", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()).split(".").reverse().join("-");
+}
+function validPrices(p) {
+  if (!Array.isArray(p) || p.length === 0 || p.length > 500) return false;
+  return p.every((r) => r && typeof r.model === "string" && r.model.trim().length > 0 && r.model.length <= 80 &&
+    ["A", "S", "Z"].includes(r.group) &&
+    ["display", "battery", "back"].every((k) => Number.isInteger(r[k]) && r[k] >= 0 && r[k] <= 500000));
+}
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -183,11 +212,17 @@ function serveStatic(req, res, pathname) {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://x");
   const ip = req.socket.remoteAddress || "?";
+  applyCors(req, res);
   const t0 = Date.now();
   res.on("finish", () => {
     console.log(new Date().toISOString(), req.method, url.pathname, res.statusCode, (Date.now() - t0) + "ms", ip);
   });
   try {
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, { "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS", "Access-Control-Allow-Headers": "Content-Type, X-Admin-Token", "Access-Control-Max-Age": "86400" });
+      res.end();
+      return;
+    }
     if (req.method === "GET" && url.pathname === "/api/health") {
       return send(res, 200, { ok: true, time: new Date().toISOString(), uptimeSec: Math.round((Date.now() - STARTED_AT) / 1000), leads: leads.length });
     }
@@ -283,6 +318,18 @@ const server = http.createServer(async (req, res) => {
       const hb = setInterval(() => { try { res.write(": ping\n\n"); } catch (e) { clearInterval(hb); sseClients.delete(res); } }, 25000);
       req.on("close", () => { clearInterval(hb); sseClients.delete(res); });
       return;
+    }
+    if (req.method === "PUT" && url.pathname === "/api/prices") {
+      if (!requireAdmin(req, url, res, ip)) return;
+      let body;
+      try { body = JSON.parse(await readBody(req, 100 * 1024)); }
+      catch (e) { return send(res, 400, { ok: false, error: "bad body" }); }
+      if (!validPrices(body.prices)) return send(res, 400, { ok: false, error: "bad prices" });
+      PRICES = body.prices.map((r) => ({ model: r.model.trim(), group: r.group, display: r.display, battery: r.battery, back: r.back }));
+      PRICES_UPDATED = todayMSK();
+      savePrices();
+      broadcast("prices:update", { updated: PRICES_UPDATED });
+      return send(res, 200, { ok: true, updated: PRICES_UPDATED });
     }
     if (req.method === "GET") return serveStatic(req, res, url.pathname);
     return send(res, 405, { ok: false, error: "method not allowed" });

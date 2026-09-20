@@ -36,6 +36,8 @@ tr.fresh{box-shadow:inset 3px 0 var(--lime)}
 .live{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
 .hidden{display:none!important}
 .footback{margin-top:22px}
+#pedit{margin-bottom:18px}
+#pedit table input{width:92px;padding:8px}
 @media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}
 a.back{color:var(--lime);font-size:14px}
 </style>
@@ -51,7 +53,11 @@ a.back{color:var(--lime);font-size:14px}
 <div class="stat"><b><em id="stDone">0</em></b><span>завершено</span></div>
 <div class="stat"><b><em id="stToday">0</em></b><span>сегодня</span></div>
 </div>
-<div class="bar hidden" id="bar"><input id="q" placeholder="Поиск: имя, телефон, тема"><button class="ghost" id="reload">Обновить</button><button class="ghost" id="csv">Скачать CSV</button><button class="ghost" id="blank">Бланк гарантии</button><label class="live"><input type="checkbox" id="live" checked> live</label><span class="count" id="count"></span></div>
+<div class="bar hidden" id="bar"><input id="q" placeholder="Поиск: имя, телефон, тема"><button class="ghost" id="reload">Обновить</button><button class="ghost" id="csv">Скачать CSV</button><button class="ghost" id="blank">Бланк гарантии</button><button class="ghost" id="ptoggle">Цены</button><label class="live"><input type="checkbox" id="live" checked> live</label><span class="count" id="count"></span></div>
+<div id="pedit" class="hidden">
+<div class="bar"><button class="ghost" id="psave">Сохранить цены</button><span class="count">Только числа, в рублях. Дата обновится сама.</span></div>
+<table><thead><tr><th>Модель</th><th>Дисплей</th><th>АКБ</th><th>Крышка</th></tr></thead><tbody id="prows"></tbody></table>
+</div>
 <table id="tbl" class="hidden"><thead><tr><th>#</th><th>Когда</th><th>Имя</th><th>Телефон</th><th>Тема</th><th></th></tr></thead><tbody id="rows"></tbody></table>
 <div id="toast"></div>
 <p class="footback"><a class="back" href="./">← На сайт</a></p>
@@ -117,6 +123,8 @@ $("reload").onclick=load;
 $("q").addEventListener("input",render);
 $("csv").onclick=async()=>{try{const r=await fetch("api/leads.csv",{headers:{"X-Admin-Token":token}});if(!r.ok)throw new Error();const b=await r.blob();const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="dixon-leads.csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}catch(e){$("err").textContent="Ошибка: не скачалось"}};
 $("blank").onclick=()=>{open("./garantiya.html","_blank")};
+$("ptoggle").onclick=async()=>{const p=$("pedit");if(!p.classList.contains("hidden")){p.classList.add("hidden");return}try{const j=await api("api/prices");const tb=$("prows");tb.innerHTML="";j.prices.forEach((r,i)=>{const tr=document.createElement("tr");tr.innerHTML="<td></td>";tr.children[0].textContent=r.model;["display","battery","back"].forEach(k=>{const td=document.createElement("td");const inp=document.createElement("input");inp.value=r[k];inp.inputMode="numeric";inp.dataset.i=i;inp.dataset.k=k;td.appendChild(inp);tr.appendChild(td)});tb.appendChild(tr)});p.classList.remove("hidden")}catch(e){$("err").textContent="Ошибка: "+e.message}};
+$("psave").onclick=async()=>{try{const cur=await api("api/prices");const prices=cur.prices.map(r=>({model:r.model,group:r.group,display:r.display,battery:r.battery,back:r.back}));document.querySelectorAll("#prows input").forEach(inp=>{const v=parseInt(String(inp.value).replace(/\D/g,""),10);prices[+inp.dataset.i][inp.dataset.k]=isNaN(v)?0:v});const r=await fetch("api/prices",{method:"PUT",headers:{"Content-Type":"application/json","X-Admin-Token":token},body:JSON.stringify({prices})});const j=await r.json();if(!j.ok)throw new Error(j.error||"error");toast("Цены сохранены ("+j.updated+")")}catch(e){$("err").textContent="Ошибка: "+e.message}};
 setInterval(()=>{const lv=document.querySelector('#live');if(lv&&lv.checked&&token)load()},30000);
 let esToast=null;
 function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(esToast);esToast=setTimeout(()=>t.classList.remove("show"),4000)}
