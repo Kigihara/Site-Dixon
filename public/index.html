@@ -51,7 +51,9 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);background:rg
 .logo-mark{width:34px;height:34px;border-radius:10px;background:var(--lime);color:#111;display:grid;place-items:center;font-weight:800;font-size:18px}
 .logo small{font-family:var(--font-m);font-size:10px;color:var(--muted);display:block;letter-spacing:.12em;font-weight:400}
 .nav-links{display:flex;gap:22px;margin-left:18px;font-size:14.5px;color:#C9CFDA}
-.nav-links a{opacity:.85}.nav-links a:hover{opacity:1;color:#fff}
+.nav-links a{opacity:.85;position:relative;padding:6px 0}.nav-links a:hover{opacity:1;color:#fff}
+.nav-links a.active{opacity:1;color:#fff}
+.nav-links a.active::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:var(--lime)}
 .nav-right{margin-left:auto;display:flex;align-items:center;gap:14px}
 .status-dot{display:none;align-items:center;gap:8px;font-family:var(--font-m);font-size:12px;color:#B9C2D2;border:1px solid var(--line);padding:8px 12px;border-radius:999px;white-space:nowrap}
 @media(min-width:1700px){.status-dot{display:flex}}
