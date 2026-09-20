@@ -291,8 +291,10 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 .calc-f>span{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;color:var(--muted)}
 .calc-f select{background:#0D121B;border:1px solid var(--line);border-radius:14px;padding:15px;color:#fff;font:inherit;width:100%;cursor:pointer}
 .calc-f select:focus{outline:2px solid var(--lime);border-color:var(--lime)}
-.calc-out{background:rgba(91,147,255,.06);border:1px solid rgba(91,147,255,.35);border-left:4px solid var(--lime);border-radius:14px;padding:15px 18px;font-size:15px}
-.calc-out b{color:var(--lime);font-family:var(--font-m);font-size:22px}
+/* v1.23 calc output without box: open layout, display price */
+.calc-out{background:transparent;border:none;border-radius:0;padding:10px 4px;font-size:15px}
+.calc-out b{color:var(--lime);font-family:var(--font-m);font-size:28px}
+.calc-out .go{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1.5px}
 .calc-out .go{display:inline-block;margin-top:8px;color:var(--lime);font-weight:800;font-size:13.5px;cursor:pointer}
 /* CSP-safe replacements for former inline styles */
 .d2{animation-delay:-1.5s}
