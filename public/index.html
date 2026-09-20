@@ -31,6 +31,8 @@ body{background:var(--bg);color:#EDEFF3;font-family:var(--font-b);overflow-x:hid
 ::selection{background:var(--lime);color:#111}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit}
+a,button{-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{touch-action:manipulation}
 .wrap{max-width:1360px;margin:0 auto;padding:0 28px}
 .mono{font-family:var(--font-m)}
 /* grain */
@@ -334,9 +336,20 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
  .rev-grid{grid-template-columns:1fr}
 }
 @media(max-width:640px){
- .callbar{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:60;background:var(--lime);color:#111;border-radius:16px;padding:15px;justify-content:center;font-weight:800;font-size:15px}
+ .callbar{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:60;background:var(--lime);color:#111;border-radius:16px;padding:16px;justify-content:center;font-weight:800;font-size:16px;transition:transform .35s cubic-bezier(.16,1,.3,1),opacity .35s}
+ .callbar.hide{transform:translateY(160%);opacity:0;pointer-events:none}
  footer{padding-bottom:96px}
- #toTop{bottom:78px;right:14px}
+ #toTop{bottom:calc(78px + env(safe-area-inset-bottom));right:14px;width:52px;height:52px}
+ /* v1.17 mobile premium: swipe table + sticky model column + 44px taps */
+ #ptable{min-width:560px}
+ #ptable td:first-child,#ptable thead th:first-child{position:sticky;left:0;z-index:1}
+ #ptable thead th:first-child{z-index:3}
+ #ptable td:first-child{background:#fff;box-shadow:1px 0 0 #E6E7E0}
+ .chipbtn{padding:13px 18px}
+ .quick button{padding:11px 16px}
+ .faq-item>button{padding:20px}
+ .mmenu a{padding:14px 2px}
+ .hero-cta .btn{padding:16px 24px}
 }
 @media print{
  header,.lab,.hero-cta,.quick,.marquee,.quiz,.faq,.rev-grid,.adv,.steps,.contact-grid,.callbar,#toTop,.grain,.progress,#loader,.mmenu,.burger,.route-btns,footer{display:none!important}
@@ -607,6 +620,8 @@ document.querySelectorAll('.faq-item>button').forEach(b=>b.onclick=()=>{const it
 // phone mask +7 (___) ___-__-__
 const ph=document.querySelector('input[name=p]');
 if(ph)ph.addEventListener('input',()=>{let d=ph.value.replace(/\D/g,'');if(d.startsWith('8'))d='7'+d.slice(1);if(d&&!d.startsWith('7'))d='7'+d;d=d.slice(0,11);let r='+7';if(d.length>1)r+=' ('+d.slice(1,4);if(d.length>=4)r+=')';if(d.length>4)r+=' '+d.slice(4,7);if(d.length>7)r+='-'+d.slice(7,9);if(d.length>9)r+='-'+d.slice(9,11);ph.value=d.length<=1?'+7':r});
+// v1.17 smart callbar: hide while contacts (with its own CTA) on screen
+(function(){try{var cb=document.querySelector('.callbar'),cc=document.getElementById('contacts');if(!cb||!cc||!('IntersectionObserver' in window))return;new IntersectionObserver(es=>es.forEach(x=>cb.classList.toggle('hide',x.isIntersecting)),{threshold:.12}).observe(cc)}catch(e){}})();
 // back to top
 const tt=document.getElementById('toTop');
 if(tt){addEventListener('scroll',()=>tt.classList.toggle('show',scrollY>900),{passive:true});tt.onclick=()=>scrollTo({top:0,behavior:'smooth'})}
