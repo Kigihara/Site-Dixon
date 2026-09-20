@@ -454,5 +454,6 @@ const server = http.createServer(async (req, res) => {
 });
 
 if (ADMIN_TOKEN === "dixon-12345") console.log("WARNING: default ADMIN_TOKEN in use — set a strong ADMIN_TOKEN env on any public server!");
+console.log("Storage: " + (useSupa ? "supabase" : "sqlite (local fallback)"));
 if (process.env.TG_BOT && process.env.TG_CHAT) { tgPollLoop(); console.log("Telegram sync on"); }
 server.listen(PORT, process.env.HOST || "127.0.0.1", () => console.log("DIXON backend on http://127.0.0.1:" + PORT + " (public/, data/)"));
