@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DIXON — Авторизованный сервисный центр Samsung в Чебоксарах</title>
-<meta name="description" content="DIXON — ремонт Samsung в Чебоксарах: экраны, аккумуляторы, корпуса, разъёмы. Оригинальные запчасти, гарантия, ремонт от 40 минут. Калинина, 91к1.">
+<meta name="description" content="DIXON — ремонт Samsung в Чебоксарах: экраны, аккумуляторы, корпуса, разъёмы. Также официально ремонтируем Huawei, Honor, Tecno, Infinix, Realme, Oppo. Оригинальные запчасти, гарантия. Калинина, 91к1.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235B93FF'/%3E%3Ctext x='16' y='23' font-size='18' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%23111'%3ED%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#0B0E13">
 <link rel="manifest" href="./manifest.webmanifest">
@@ -480,7 +480,7 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <div class="marquee"><div class="marquee-track" id="marquee"></div></div>
 
 <section class="block wrap" id="fix">
-<div class="sec-head reveal"><h2>Что ломается — то и чиним. Без воды.</h2><p>Шесть направлений, по которым у нас всегда есть запчасти и оснастка. Выберите свою проблему — дальше подскажем цену.</p></div>
+<div class="sec-head reveal"><h2>Что ломается — то и чиним. Без воды.</h2><p>Шесть направлений, по которым у нас всегда есть запчасти и оснастка. Кроме Samsung официально ремонтируем Huawei, Honor, Tecno, Infinix, Realme и Oppo. Выберите свою проблему — дальше подскажем цену.</p></div>
 <div class="bento">
 <div class="card big reveal"><span class="tag">ХИТ • 41% ОБРАЩЕНИЙ</span><div class="icon"><svg><use href="#i-screen"/></svg></div><h3>Замена и ремонт экрана</h3><ul><li>разбилось стекло / трещины</li><li>не работает сенсор или часть экрана</li><li>нет подсветки</li><li>не гаснет при разговоре</li></ul><p class="mono fine">OLED с рамой и без • калибровка • от 3 500 ₽</p><div class="pop"><div>A15 / A25 <b>от 5 500 ₽</b></div><div>S24 / S24 Ultra <b>от 13 500 ₽</b></div><div>Z Fold 5 <b>от 53 500 ₽</b></div><a href="#price">Подобрать по модели ↓</a></div></div>
 <div class="card reveal"><div class="icon"><svg><use href="#i-batt"/></svg></div><h3>Аккумулятор</h3><ul><li>быстро садится</li><li>греется / не заряжается</li><li>плохой контакт</li></ul></div>
@@ -612,7 +612,7 @@ const li=setInterval(()=>{p=Math.min(100,p+Math.random()*16);nEl.textContent=Mat
 // progress
 addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progress').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'},{passive:true});
 // marquee
-const items=['РЕМОНТ SAMSUNG <b>ОТ 40 МИНУТ</b>','ОРИГИНАЛЬНЫЕ OLED <b>В НАЛИЧИИ</b>','ДИАГНОСТИКА <b>БЕСПЛАТНО</b>','ГАРАНТИЯ <b>ДО 12 МЕСЯЦЕВ</b>','КАЛИНИНА 91К1 • <b>36-42-02</b>'];
+const items=['РЕМОНТ SAMSUNG <b>ОТ 40 МИНУТ</b>','ОРИГИНАЛЬНЫЕ OLED <b>В НАЛИЧИИ</b>','ДИАГНОСТИКА <b>БЕСПЛАТНО</b>','ГАРАНТИЯ <b>ДО 12 МЕСЯЦЕВ</b>','ТАКЖЕ РЕМОНТИРУЕМ <b>HUAWEI • HONOR • TECNO • INFINIX • REALME • OPPO</b>','КАЛИНИНА 91К1 • <b>36-42-02</b>'];
 document.getElementById('marquee').innerHTML=(items.concat(items).map(s=>'<span>'+s+'</span><span>✦</span>').join(''));
 // reveal
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.12});
