@@ -76,20 +76,75 @@ const MIME = {
   ".webm": "video/webm"
 };
 
-// ---- storage ----
-fs.mkdirSync(DATA, { recursive: true });
-let leads = [];
-try {
-  leads = JSON.parse(fs.readFileSync(LEADS_FILE, "utf8"));
-  if (!Array.isArray(leads)) leads = [];
-} catch (e) { leads = []; }
-let nextId = leads.reduce((m, l) => Math.max(m, l.id || 0), 0) + 1;
-function saveLeads() {
-  try {
-    if (fs.existsSync(LEADS_FILE)) fs.copyFileSync(LEADS_FILE, LEADS_FILE + ".bak");
-  } catch (e) {}
-  fs.writeFileSync(LEADS_FILE, JSON.stringify(leads, null, 2));
+// ---- storage: Supabase (online) or local SQLite (fallback, needs volume on prod) ----
+const SUPA_URL = (process.env.SUPABASE_URL || "").replace(/\/+$/, "");
+const SUPA_KEY = (process.env.SUPABASE_KEY || "").trim();
+const useSupa = !!(SUPA_URL && SUPA_KEY);
+function supa(path, opts) {
+  opts = opts || {};
+  opts.headers = Object.assign({ apikey: SUPA_KEY, Authorization: "Bearer " + SUPA_KEY, "Content-Type": "application/json", Prefer: "return=representation" }, opts.headers || {});
+  return fetch(SUPA_URL + "/rest/v1/leads" + (path || ""), opts).then((r) => {
+    if (!r.ok) throw new Error("supabase " + r.status);
+    return r.json().catch(() => null);
+  });
 }
+let lite = null; // node:sqlite handle (fallback only)
+function liteDb() {
+  if (lite) return lite;
+  const { DatabaseSync } = require("node:sqlite");
+  fs.mkdirSync(DATA, { recursive: true });
+  lite = new DatabaseSync(path.join(DATA, "dixon.db"));
+  lite.exec("CREATE TABLE IF NOT EXISTS leads (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT NOT NULL, name TEXT NOT NULL, phone TEXT NOT NULL, topic TEXT NOT NULL, accepted INTEGER NOT NULL DEFAULT 0, done INTEGER NOT NULL DEFAULT 0)");
+  return lite;
+}
+function liteRow(r) { return r && { id: r.id, ts: r.ts, name: r.name, phone: r.phone, topic: r.topic, accepted: !!r.accepted, done: !!r.done }; }
+async function dbAll() {
+  if (useSupa) return (await supa("?select=*&order=id.asc")) || [];
+  return liteDb().prepare("SELECT * FROM leads ORDER BY id ASC").all().map(liteRow);
+}
+async function dbGet(id) {
+  if (useSupa) { const r = await supa("?select=*&id=eq." + id); return (r && r[0]) || null; }
+  return liteRow(liteDb().prepare("SELECT * FROM leads WHERE id=?").get(id));
+}
+async function dbAdd(entry) {
+  if (useSupa) { const r = await supa("", { method: "POST", body: JSON.stringify({ ts: entry.ts, name: entry.name, phone: entry.phone, topic: entry.topic, accepted: false, done: false }) }); return r && r[0]; }
+  const q = liteDb().prepare("INSERT INTO leads (ts,name,phone,topic,accepted,done) VALUES (?,?,?,?,0,0)").run(entry.ts, entry.name, entry.phone, entry.topic);
+  return dbGet(Number(q.lastInsertRowid));
+}
+async function dbSet(id, patch) {
+  const body = {};
+  if ("accepted" in patch) body.accepted = !!patch.accepted;
+  if ("done" in patch) body.done = !!patch.done;
+  if (useSupa) { const r = await supa("?id=eq." + id, { method: "PATCH", body: JSON.stringify(body) }); return r && r[0]; }
+  const cur = await dbGet(id);
+  if (!cur) return null;
+  liteDb().prepare("UPDATE leads SET accepted=?, done=? WHERE id=?").run(
+    body.accepted !== undefined ? (body.accepted ? 1 : 0) : (cur.accepted ? 1 : 0),
+    body.done !== undefined ? (body.done ? 1 : 0) : (cur.done ? 1 : 0), id);
+  return dbGet(id);
+}
+async function dbDel(id) {
+  if (useSupa) { await supa("?id=eq." + id, { method: "DELETE", headers: { Prefer: "return=minimal" } }); return; }
+  liteDb().prepare("DELETE FROM leads WHERE id=?").run(id);
+}
+async function dbDupe(phone, topic) {
+  if (useSupa) { const r = await supa("?select=id,ts&phone=eq." + encodeURIComponent(phone) + "&topic=eq." + encodeURIComponent(topic) + "&order=id.desc&limit=1"); return (r && r[0]) || null; }
+  return liteDb().prepare("SELECT id,ts FROM leads WHERE phone=? AND topic=? ORDER BY id DESC LIMIT 1").get(phone, topic) || null;
+}
+(async function importLegacy() { // one-time: leads.json -> active backend
+  try {
+    if ((await dbAll()).length) return;
+    const old = JSON.parse(fs.readFileSync(LEADS_FILE, "utf8"));
+    if (!Array.isArray(old) || !old.length) return;
+    for (const l of old) {
+      try {
+        const row = await dbAdd({ ts: l.ts || new Date().toISOString(), name: String(l.name || "").slice(0, 60), phone: l.phone, topic: l.topic });
+        if (row && (l.accepted || l.done)) await dbSet(row.id, { accepted: !!l.accepted, done: !!l.done });
+      } catch (e) {}
+    }
+    try { fs.renameSync(LEADS_FILE, LEADS_FILE + ".imported"); } catch (e) {}
+  } catch (e) {}
+})();
 const SEC_HEADERS = { "X-Content-Type-Options": "nosniff", "X-Frame-Options": "SAMEORIGIN", "Referrer-Policy": "no-referrer" };
 // Strict CSP: only own files + hashed inline scripts/styles (computed at boot).
 function pageCspHashes() {
@@ -163,12 +218,11 @@ async function tgPollOnce() {
     if (!cb || typeof cb.data !== "string") continue;
     const m = /^accept:(\d+)$/.exec(cb.data);
     if (!m) { tgApi("answerCallbackQuery", { callback_query_id: cb.id, text: "?" }); continue; }
-    const lead = leads.find((l) => l.id === Number(m[1]));
+    const lead = await dbGet(Number(m[1]));
     if (!lead) { tgApi("answerCallbackQuery", { callback_query_id: cb.id, text: "Заявка не найдена" }); continue; }
     if (lead.done) { tgApi("answerCallbackQuery", { callback_query_id: cb.id, text: "Уже завершена" }); continue; }
     if (lead.accepted) { tgApi("answerCallbackQuery", { callback_query_id: cb.id, text: "Уже принята" }); continue; }
-    lead.accepted = true;
-    saveLeads();
+    await dbSet(lead.id, { accepted: true });
     broadcast("lead:update", { id: lead.id, accepted: true });
     tgApi("answerCallbackQuery", { callback_query_id: cb.id, text: "Принята ✅" });
     if (cb.message) {
@@ -276,7 +330,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if (req.method === "GET" && url.pathname === "/api/health") {
-      return send(res, 200, { ok: true, time: new Date().toISOString(), uptimeSec: Math.round((Date.now() - STARTED_AT) / 1000), leads: leads.length });
+      return send(res, 200, { ok: true, time: new Date().toISOString(), uptimeSec: Math.round((Date.now() - STARTED_AT) / 1000), leads: (await dbAll()).length, db: useSupa ? "supabase" : "sqlite" });
     }
     if (req.method === "GET" && url.pathname === "/api/prices") {
       return send(res, 200, { ok: true, updated: PRICES_UPDATED, prices: PRICES });
@@ -294,39 +348,41 @@ const server = http.createServer(async (req, res) => {
       if (!TOPICS.includes(topic)) return send(res, 400, { ok: false, error: "Выберите тему обращения." });
       if (body.consent !== true) return send(res, 400, { ok: false, error: "Нужно согласие на обработку данных." });
       if (String(body.company || "").trim() !== "") return send(res, 200, { ok: true, id: 0, quiet: true }); // honeypot: pretend success
-      const dupe = leads.find((l) => l.phone === phone && l.topic === topic && (Date.now() - new Date(l.ts).getTime()) < 10 * 60 * 1000);
-      if (dupe) return send(res, 200, { ok: true, id: dupe.id, duplicate: true });
-      const lead = { id: nextId++, ts: new Date().toISOString(), name, phone, topic, accepted: false, done: false };
-      leads.push(lead);
-      saveLeads();
+      let lead;
+      try {
+        const dupe = await dbDupe(phone, topic);
+        if (dupe && (Date.now() - new Date(dupe.ts).getTime()) < 10 * 60 * 1000) return send(res, 200, { ok: true, id: dupe.id, duplicate: true });
+        lead = await dbAdd({ ts: new Date().toISOString(), name, phone, topic });
+        if (!lead) throw new Error("db");
+      } catch (e) { return send(res, 500, { ok: false, error: "Не получилось сохранить. Позвоните нам: 8 (8352) 36-42-02." }); }
       broadcast("lead:new", { id: lead.id, name, phone, topic, ts: lead.ts });
       tgNotify(lead);
       return send(res, 200, { ok: true, id: lead.id });
     }
     if (req.method === "GET" && url.pathname === "/api/leads") {
       if (!requireAdmin(req, url, res, ip)) return;
-      return send(res, 200, { ok: true, leads: [...leads].reverse() });
+      return send(res, 200, { ok: true, leads: (await dbAll()).reverse() });
     }
     if (req.method === "PATCH" && url.pathname.startsWith("/api/leads/")) {
       if (!requireAdmin(req, url, res, ip)) return;
       const id = Number(url.pathname.split("/").pop());
-      const lead = leads.find((l) => l.id === id);
+      const lead = await dbGet(id);
       if (!lead) return send(res, 404, { ok: false, error: "not found" });
       let body;
       try { body = JSON.parse(await readBody(req, 1024)); }
       catch (e) { return send(res, 400, { ok: false, error: "bad body" }); }
-      if ("accepted" in body) lead.accepted = !!body.accepted;
-      if ("done" in body) lead.done = !!body.done;
-      saveLeads();
-      broadcast("lead:update", { id: lead.id, done: lead.done });
-      return send(res, 200, { ok: true, lead });
+      const updated = await dbSet(id, body);
+      if (!updated) return send(res, 404, { ok: false, error: "not found" });
+      broadcast("lead:update", { id: updated.id, accepted: updated.accepted, done: updated.done });
+      return send(res, 200, { ok: true, lead: updated });
     }
     if (req.method === "GET" && url.pathname === "/api/stats") {
       if (!requireAdmin(req, url, res, ip)) return;
       const today = new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Moscow", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
       const byTopic = {};
       let open = 0, accepted = 0, todayN = 0;
-      for (const l of leads) {
+      const rows = await dbAll();
+      for (const l of rows) {
         if (l.done) {} else open++;
         if (l.accepted && !l.done) accepted++;
         byTopic[l.topic] = (byTopic[l.topic] || 0) + 1;
@@ -335,13 +391,13 @@ const server = http.createServer(async (req, res) => {
           if (d === today) todayN++;
         } catch (e) {}
       }
-      return send(res, 200, { ok: true, total: leads.length, open, accepted, done: leads.length - open, today: todayN, byTopic });
+      return send(res, 200, { ok: true, total: rows.length, open, accepted, done: rows.length - open, today: todayN, byTopic });
     }
     if (req.method === "GET" && url.pathname === "/api/leads.csv") {
       if (!requireAdmin(req, url, res, ip)) return;
       const esc = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
       const rows = ["id,ts,name,phone,topic,done"];
-      for (const l of [...leads].reverse()) rows.push([l.id, l.ts, esc(l.name), l.phone, esc(l.topic), l.done ? 1 : 0].join(","));
+      for (const l of (await dbAll()).reverse()) rows.push([l.id, l.ts, esc(l.name), l.phone, esc(l.topic), l.done ? 1 : 0].join(","));
       const body = "﻿" + rows.join("\r\n");
       res.writeHead(200, Object.assign({ "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": 'attachment; filename="dixon-leads.csv"', "Content-Length": Buffer.byteLength(body) }, SEC_HEADERS));
       return res.end(body);
@@ -349,10 +405,9 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "DELETE" && url.pathname.startsWith("/api/leads/")) {
       if (!requireAdmin(req, url, res, ip)) return;
       const id = Number(url.pathname.split("/").pop());
-      const i = leads.findIndex((l) => l.id === id);
-      if (i === -1) return send(res, 404, { ok: false, error: "not found" });
-      leads.splice(i, 1);
-      saveLeads();
+      const lead = await dbGet(id);
+      if (!lead) return send(res, 404, { ok: false, error: "not found" });
+      await dbDel(id);
       broadcast("lead:delete", { id });
       return send(res, 200, { ok: true });
     }
