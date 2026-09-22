@@ -120,7 +120,13 @@ section.block{padding:72px 0}
 .sec-head{max-width:760px;margin-bottom:30px}
 .sec-head h2{font-family:var(--font-d);font-size:clamp(26px,3.4vw,44px);line-height:1.02;margin:14px 0 12px}
 .sec-head p{color:#AEB6C6}
-/* bento faults */
+/* v1.35 bento 2.0: honest prices inside + glow borders */
+.card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(91,147,255,.55),transparent 45%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .35s;pointer-events:none}
+.card:hover::before{opacity:1}
+.card.big .tag{box-shadow:0 0 18px rgba(91,147,255,.35)}
+.pop>div{border-bottom:1px dashed rgba(255,255,255,.1);padding-bottom:8px}
+.cfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);color:var(--lime);font-weight:800;font-size:13.5px}
+.cfoot span{font-family:var(--font-m);font-size:13px}
 .bento{display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:auto auto;gap:14px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
 .card:hover{transform:translateY(-4px);border-color:rgba(91,147,255,.4)}
@@ -500,10 +506,10 @@ section.block{content-visibility:auto;contain-intrinsic-size:auto 700px}
 <div class="sec-head reveal"><h2>Что ломается — то и чиним. Без воды.</h2><p>Шесть направлений, по которым у нас всегда есть запчасти и оснастка. Кроме Samsung официально ремонтируем Huawei, Honor, Tecno, Infinix, Realme и Oppo. Выберите свою проблему — дальше подскажем цену.</p></div>
 <div class="bento">
 <div class="card big reveal"><span class="tag">ХИТ • 41% ОБРАЩЕНИЙ</span><div class="icon"><svg><use href="#i-screen"/></svg></div><h3>Замена и ремонт экрана</h3><ul><li>разбилось стекло / трещины</li><li>не работает сенсор или часть экрана</li><li>нет подсветки</li><li>не гаснет при разговоре</li></ul><p class="mono fine">OLED с рамой и без • калибровка • от 3 500 ₽</p><div class="pop"><div>A15 / A25 <b>от 5 500 ₽</b></div><div>S24 / S24 Ultra <b>от 13 500 ₽</b></div><div>Z Fold 5 <b>от 53 500 ₽</b></div><a href="#price">Подобрать по модели ↓</a></div></div>
-<div class="card reveal"><div class="icon"><svg><use href="#i-batt"/></svg></div><h3>Аккумулятор</h3><ul><li>быстро садится</li><li>греется / не заряжается</li><li>плохой контакт</li></ul></div>
-<div class="card reveal"><div class="icon"><svg><use href="#i-home"/></svg></div><h3>Корпус</h3><ul><li>задняя крышка треснула</li><li>царапины / разбит полностью</li></ul></div>
-<div class="card reveal"><div class="icon"><svg><use href="#i-wifi"/></svg></div><h3>Общие проблемы</h3><ul><li>не работает Wi-Fi / SIM</li><li>попала влага</li><li>динамик, камера</li><li>кнопки Home, громкость, включение</li></ul></div>
-<div class="card reveal"><div class="icon"><svg><use href="#i-plug"/></svg></div><h3>Разъёмы</h3><ul><li>не заряжается</li><li>наушники / ПК не видит</li></ul></div>
+<div class="card reveal"><div class="icon"><svg><use href="#i-batt"/></svg></div><h3>Аккумулятор</h3><ul><li>быстро садится</li><li>греется / не заряжается</li><li>плохой контакт</li></ul><a class="cfoot" href="#price">с работой <span>от 4 200 ₽ →</span></a></div>
+<div class="card reveal"><div class="icon"><svg><use href="#i-home"/></svg></div><h3>Корпус</h3><ul><li>задняя крышка треснула</li><li>царапины / разбит полностью</li></ul><a class="cfoot" href="#price">с работой <span>от 2 100 ₽ →</span></a></div>
+<div class="card reveal"><div class="icon"><svg><use href="#i-wifi"/></svg></div><h3>Общие проблемы</h3><ul><li>не работает Wi-Fi / SIM</li><li>попала влага</li><li>динамик, камера</li><li>кнопки Home, громкость, включение</li></ul><a class="cfoot" href="#contacts">диагностика <span>бесплатно →</span></a></div>
+<div class="card reveal"><div class="icon"><svg><use href="#i-plug"/></svg></div><h3>Разъёмы</h3><ul><li>не заряжается</li><li>наушники / ПК не видит</li></ul><a class="cfoot" href="#contacts">цена <span>после диагностики →</span></a></div>
 
 </div>
 </section>
